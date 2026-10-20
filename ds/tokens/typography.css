@@ -1,0 +1,18 @@
+/* GOV.BR DS v4 — typography (source: figma/typography.json). v4 switched family to Noto Sans (was Rawline in v3). */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Sans+Mono:wght@400;600;700&family=Noto+Serif:wght@400;600;700&display=swap');
+
+:root{
+  --font-primary:"Noto Sans","Rawline",-apple-system,sans-serif;
+  --font-secondary:"Noto Sans Mono",ui-monospace,monospace;
+  --font-tertiary:"Noto Serif",Georgia,serif; /* served by the Google Fonts stylesheet imported above */
+
+  --fw-regular:400;/* @kind font */--fw-medium:500;/* @kind font */--fw-semibold:600;/* @kind font */--fw-bold:700;/* @kind font */
+
+  /* Major Second scale (1.125), base 16px */
+  --fs-base:16px;
+  --fs-up-1:18px;--fs-up-2:20.25px;--fs-up-3:22.78px;--fs-up-4:25.63px;
+  --fs-up-5:28.83px;--fs-up-6:32.44px;--fs-up-7:36.49px;--fs-up-8:41.05px;
+  --fs-down-1:14.22px;--fs-down-2:12.64px;--fs-down-3:11.24px;--fs-down-4:9.99px;
+
+  --lh-tight:1.2;/* @kind other */--lh-normal:1.5;/* @kind other */--lh-loose:1.9;/* @kind other */
+}

@@ -1,0 +1,7 @@
+/* GOV.BR DS v4 — spacing (source: figma/spacing.json) */
+:root{
+  --sp-none:0;/* @kind spacing */
+  --sp-layout-1:8px;--sp-layout-2:16px;--sp-layout-3:24px;--sp-layout-4:32px;--sp-layout-5:40px;
+  --sp-layout-6:48px;--sp-layout-7:56px;--sp-layout-8:64px;--sp-layout-9:72px;--sp-layout-10:80px;
+  --sp-adjust-1:4px;--sp-adjust-2:12px;--sp-adjust-3:20px;--sp-adjust-4:28px;--sp-adjust-5:36px;
+}

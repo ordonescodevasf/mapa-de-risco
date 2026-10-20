@@ -1,0 +1,7 @@
+/* GOV.BR DS v4 — surface: border width, radius, opacity (source: figma/surface.json) */
+:root{
+  --border-w-none:0;/* @kind other */--border-w-sm:1px;--border-w-md:2px;--border-w-lg:4px;
+  --radius-none:0;/* @kind radius */--radius-sm:4px;--radius-md:8px;--radius-lg:12px;--radius-full:9999px;
+  --op-10:.1;/* @kind other */--op-20:.2;/* @kind other */--op-30:.3;/* @kind other */--op-40:.4;/* @kind other */--op-50:.5;/* @kind other */--op-60:.6;/* @kind other */--op-70:.7;/* @kind other */--op-80:.8;/* @kind other */--op-90:.9;/* @kind other */
+  --target-min:24px;/* @kind other */--target-enhanced:44px;/* @kind other */
+}

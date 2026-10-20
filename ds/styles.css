@@ -1,0 +1,14 @@
+@import "tokens/colors.css";
+@import "tokens/typography.css";
+@import "tokens/fonts-rawline.css";
+@import "tokens/spacing.css";
+@import "tokens/surface.css";
+@import "tokens/elevation.css";
+@import "tokens/motion.css";
+@import "components/core.css";
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
+
+*{box-sizing:border-box}
+body{font-family:var(--font-primary);color:var(--fg-primary);background:var(--bg-main-primary);margin:0}
+a{color:var(--interactive)}
+a:hover{color:var(--active)}

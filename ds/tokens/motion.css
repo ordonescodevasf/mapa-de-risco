@@ -1,0 +1,7 @@
+/* GOV.BR DS v4 — motion (source: figma/motion.json) */
+:root{
+  --ease:cubic-bezier(.25,.1,.25,1);/* @kind other */--ease-in:cubic-bezier(.42,0,1,1);/* @kind other */--ease-out:cubic-bezier(0,0,.58,1);/* @kind other */
+  --ease-in-out:cubic-bezier(.42,0,.58,1);/* @kind other */--ease-bounce-out:cubic-bezier(.25,2.1,.5,0);/* @kind other */--ease-elastic-out:cubic-bezier(.7,3.3,.3,0);/* @kind other */
+  --dur-fast-1:50ms;/* @kind other */--dur-fast-2:100ms;/* @kind other */--dur-fast-3:150ms;/* @kind other */--dur-fast-4:200ms;/* @kind other */
+  --dur-moderate-1:250ms;/* @kind other */--dur-moderate-2:300ms;/* @kind other */--dur-slow-1:450ms;/* @kind other */
+}

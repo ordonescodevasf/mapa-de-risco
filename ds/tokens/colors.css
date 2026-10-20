@@ -1,0 +1,66 @@
+/* GOV.BR DS v4 — base color scales (source: projects/tokens/src/figma/color.json) */
+:root{
+  --br-gray-1:#FCFCFC;--br-gray-2:#F8F8F8;--br-gray-3:#F6F6F6;--br-gray-4:#F3F3F3;--br-gray-5:#F0F0F0;
+  --br-gray-10:#E6E6E6;--br-gray-20:#CCCCCC;--br-gray-30:#ADADAD;--br-gray-40:#888888;--br-gray-50:#757575;
+  --br-gray-60:#636363;--br-gray-70:#4A4A4A;--br-gray-80:#333333;--br-gray-90:#1B1B1B;
+  --br-pure-0:#FFFFFF;--br-pure-100:#000000;
+
+  --br-blue-warm-vivid-5:#EDF5FF;--br-blue-warm-vivid-10:#D4E5FF;--br-blue-warm-vivid-20:#ADCDFF;
+  --br-blue-warm-vivid-30:#81AEFC;--br-blue-warm-vivid-40:#5992ED;--br-blue-warm-vivid-50:#2670E8;
+  --br-blue-warm-vivid-60:#155BCB;--br-blue-warm-vivid-70:#0040B4;--br-blue-warm-vivid-80:#0C326F;
+  --br-blue-warm-5:#ECF1F7;--br-blue-warm-10:#E1E7F1;--br-blue-warm-20:#C5D4EB;--br-blue-warm-30:#98AFD2;
+  --br-blue-warm-40:#7292C7;--br-blue-warm-50:#4A77B4;--br-blue-warm-60:#345D96;--br-blue-warm-70:#2F4668;
+  --br-blue-warm-80:#252F3E;--br-blue-warm-90:#13171F;
+  --br-blue-vivid-5:#E8F5FF;--br-blue-vivid-10:#CFE8FF;--br-blue-vivid-20:#A1D3FF;--br-blue-vivid-30:#58B4FF;
+  --br-blue-vivid-40:#2491FF;--br-blue-vivid-50:#0076D6;--br-blue-vivid-60:#005EA2;--br-blue-vivid-70:#0B4778;
+  --br-blue-vivid-80:#112F4E;
+
+  --br-red-vivid-5:#FFF3F2;--br-red-vivid-10:#FDE0DB;--br-red-vivid-20:#FDB8AE;--br-red-vivid-30:#FF8D7B;
+  --br-red-vivid-40:#FB5A47;--br-red-vivid-50:#E52207;--br-red-vivid-60:#B50909;--br-red-vivid-70:#8B0A03;--br-red-vivid-80:#5C1111;
+
+  --br-orange-vivid-5:#FDF5E6;--br-orange-vivid-10:#FCE2C5;--br-orange-vivid-20:#FFBC78;--br-orange-vivid-30:#FF8C00;
+  --br-orange-vivid-40:#DA680B;--br-orange-vivid-50:#C05600;--br-orange-vivid-60:#8C471C;--br-orange-vivid-70:#5F3617;--br-orange-vivid-80:#352313;
+
+  --br-yellow-vivid-5:#FFF5C2;--br-yellow-vivid-10:#FEE685;--br-yellow-vivid-20:#FFCD07;--br-yellow-vivid-30:#DDAA01;
+  --br-yellow-vivid-40:#B38C00;--br-yellow-vivid-50:#947100;--br-yellow-vivid-60:#776017;--br-yellow-vivid-70:#5C4809;--br-yellow-vivid-80:#422D19;
+
+  --br-green-cool-vivid-5:#E3F5E1;--br-green-cool-vivid-10:#B7F5BD;--br-green-cool-vivid-20:#70E17B;--br-green-cool-vivid-30:#21C834;
+  --br-green-cool-vivid-40:#00A91C;--br-green-cool-vivid-50:#168821;--br-green-cool-vivid-60:#216E1F;--br-green-cool-vivid-70:#154C21;--br-green-cool-vivid-80:#19311E;
+
+  --br-mint-vivid-5:#C9FBEB;--br-mint-vivid-20:#0CEDA6;--br-mint-vivid-50:#008659;
+  --br-cyan-vivid-5:#E5FAFF;--br-cyan-vivid-30:#00BDE3;--br-cyan-vivid-50:#0081A1;
+  --br-indigo-vivid-5:#F0F0FF;--br-indigo-vivid-40:#8289FF;--br-indigo-vivid-60:#4A50C4;
+
+  /* ===== semantic aliases — light theme (source: figma/light.json) ===== */
+  --fg-primary:var(--br-gray-90);
+  --fg-secondary:var(--br-gray-60);
+  --fg-contrast-primary:var(--br-gray-1);
+  --fg-contrast-secondary:var(--br-gray-20);
+  --bg-main-primary:var(--br-gray-1);
+  --bg-main-secondary:var(--br-gray-5);
+  --bg-contrast-primary:var(--br-blue-warm-80);
+  --bg-contrast-secondary:var(--br-blue-warm-70);
+  --border-primary:var(--br-gray-20);
+  --border-secondary:var(--br-gray-40);
+
+  --interactive:var(--br-blue-warm-vivid-70);
+  --interactive-contrast:var(--br-blue-warm-vivid-20);
+  --interactive-fg:var(--br-pure-0);
+  --cta:var(--br-green-cool-vivid-60);
+  --cta-contrast:var(--br-green-cool-vivid-20);
+  --disabled:var(--br-gray-70);
+  --disabled-contrast:var(--br-gray-20);
+  --visited:var(--br-blue-warm-70);
+  --focus:var(--br-orange-vivid-40);
+  --active:var(--br-blue-warm-vivid-80);
+  --selected:var(--br-blue-warm-vivid-50);
+
+  --state-error:var(--br-red-vivid-50);
+  --state-error-fg:var(--br-pure-0);
+  --state-alert:var(--br-yellow-vivid-20);
+  --state-alert-fg:var(--br-pure-100);
+  --state-success:var(--br-green-cool-vivid-40);
+  --state-success-fg:var(--br-pure-0);
+  --state-on:var(--br-blue-warm-vivid-40);
+  --state-off:var(--br-gray-40);
+}

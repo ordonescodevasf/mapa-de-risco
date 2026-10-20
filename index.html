@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mapa de Risco Digital — Cipa Codevasf</title>
+<meta name="description" content="Mapa de risco interativo do edifício-sede da Codevasf, elaborado pela Cipa.">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="ds/tokens/colors.css">
+  <link rel="stylesheet" href="ds/tokens/typography.css">
+  <link rel="stylesheet" href="ds/tokens/fonts-rawline.css">
+  <link rel="stylesheet" href="ds/tokens/spacing.css">
+  <link rel="stylesheet" href="ds/tokens/surface.css">
+  <link rel="stylesheet" href="ds/tokens/elevation.css">
+  <link rel="stylesheet" href="ds/tokens/motion.css">
+  <link rel="stylesheet" href="ds/components/core.css">
+  <link rel="stylesheet" href="ds/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="ds/ds_bundle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <style>
+    body{margin:0;background:var(--bg-main-secondary);font-family:var(--font-primary);color:var(--fg-primary)}
+    a{color:var(--interactive)} a:hover{color:var(--active)}
+    html[data-contraste="1"]{--bg-main-primary:#000;--bg-main-secondary:#111;--fg-primary:#fff;--fg-secondary:#e6e6e6;--interactive:#FFE300;--interactive-fg:#000;--active:#FFF27A;--focus:#FFE300;--cta:#FFE300;--state-success-fg:#000;--border-primary:#fff;--border-secondary:#fff;--br-blue-warm-vivid-5:#000;--br-blue-warm-vivid-10:#1a1a1a;--br-blue-vivid-5:#1a1a1a;--bg-contrast-primary:#111;--fg-contrast-primary:#fff;--fg-contrast-secondary:#e6e6e6}
+    html[data-contraste="1"] body{background:#000}
+    @media print{
+      @page{size:A4 landscape;margin:10mm}
+      body{background:#fff}
+      [data-noprint]{display:none !important}
+      [data-printonly]{display:flex !important}
+      [data-printplan]{box-shadow:none !important;padding:0 !important}
+    }
+  </style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column;font-family:var(--font-primary)">
+  <x-import component-from-global-scope="GOVBRDesignSystem_783538.SkipLink" href="#conteudo" hint-size="0px,0px">Ir para o conteúdo principal</x-import>
+
+  <header data-noprint="1" style="background:var(--bg-main-primary);box-shadow:var(--elevation-2);position:relative;z-index:40">
+    <div style="max-width:1280px;margin:0 auto;padding:0 var(--sp-layout-3);box-sizing:border-box">
+      <div style="display:flex;justify-content:flex-end;align-items:center;gap:var(--sp-adjust-1);padding:var(--sp-adjust-1) 0;border-bottom:1px solid var(--border-primary)">
+        <button type="button" aria-label="Preferências de cookies" title="Preferências de cookies" onClick="{{ abrirCookies }}" style="width:32px;height:32px;border-radius:50%;border:0;background:transparent;color:var(--interactive);cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center" style-hover="background:var(--br-blue-warm-vivid-5)"><i class="fa-solid fa-cookie-bite"></i></button>
+        <button type="button" aria-label="Alto contraste" title="Alto contraste" aria-pressed="{{ contraste }}" onClick="{{ toggleContraste }}" style="width:32px;height:32px;border-radius:50%;border:0;background:transparent;color:var(--interactive);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center" style-hover="background:var(--br-blue-warm-vivid-5)"><i class="fa-solid fa-circle-half-stroke"></i></button>
+      </div>
+      <div style="display:flex;align-items:center;gap:var(--sp-layout-2);padding:var(--sp-adjust-2) 0 var(--sp-adjust-1);flex-wrap:wrap">
+        <a href="#/" aria-label="Página inicial" style="display:flex"><sc-if value="{{ semContraste }}" hint-placeholder-val="{{ true }}"><img src="assets/govbr.svg" alt="gov.br" style="height:36px;display:block"></sc-if><sc-if value="{{ contraste }}" hint-placeholder-val="{{ false }}"><img src="assets/govbr-negativa.svg" alt="gov.br" style="height:36px;display:block"></sc-if></a>
+        <span style="width:1px;align-self:stretch;min-height:40px;background:var(--border-primary)"></span>
+        <span style="font-size:var(--fs-down-1);line-height:1.5;color:var(--fg-primary);max-width:230px;display:{{ minDisplay }}">Ministério da Integração e do Desenvolvimento Regional</span>
+        <div style="flex:1"></div>
+        <sc-if value="{{ largo }}" hint-placeholder-val="{{ true }}">
+          <nav aria-label="Principal" style="display:flex;align-items:center;gap:var(--sp-adjust-1)">
+            <sc-for list="{{ navLinks }}" as="l" hint-placeholder-count="3">
+              <a href="{{ l.href }}" aria-current="{{ l.atual }}" style="padding:var(--sp-layout-1) var(--sp-adjust-2);border-radius:var(--radius-sm);font-size:var(--fs-base);font-weight:{{ l.peso }};color:var(--interactive);text-decoration:none;white-space:nowrap" style-hover="background:var(--br-blue-warm-vivid-5)">{{ l.label }}</a>
+            </sc-for>
+          </nav>
+          <span style="width:1px;align-self:stretch;min-height:40px;background:var(--border-primary)"></span>
+        </sc-if>
+        <div style="display:flex;align-items:center;gap:var(--sp-adjust-2);flex:0 0 auto;white-space:nowrap">
+          <a href="https://www.gov.br" style="height:40px;padding:0 var(--sp-adjust-3);border-radius:100em;border:1px solid var(--interactive);color:var(--interactive);display:inline-flex;align-items:center;gap:var(--sp-layout-1);font-size:var(--fs-up-1);font-weight:600;text-decoration:none;white-space:nowrap;box-sizing:border-box" style-hover="background:var(--br-blue-warm-vivid-5)"><i class="fa-solid fa-grip"></i>{{ atalhosTxt }}</a>
+          <sc-if value="{{ naoLogado }}" hint-placeholder-val="{{ true }}">
+            <x-import component-from-global-scope="GOVBRDesignSystem_783538.SignIn" onClick="{{ entrar }}" hint-size="190px,40px">{{ entrarTxt }}</x-import>
+          </sc-if>
+          <sc-if value="{{ logado }}" hint-placeholder-val="{{ false }}">
+            <div style="position:relative">
+              <button type="button" aria-label="Notificações" aria-expanded="{{ notifAberto }}" onClick="{{ toggleNotif }}" style="position:relative;width:40px;height:40px;border-radius:50%;border:0;background:transparent;color:var(--interactive);cursor:pointer;font-size:18px" style-hover="background:var(--br-blue-warm-vivid-5)">
+                <i class="fa-solid fa-bell"></i>
+                <span style="position:absolute;top:2px;right:2px;min-width:18px;height:18px;border-radius:100em;background:var(--br-red-vivid-60);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px;box-sizing:border-box">{{ notifN }}</span>
+              </button>
+              <sc-if value="{{ notifAberto }}" hint-placeholder-val="{{ false }}">
+                <div style="white-space:normal;position:absolute;right:0;top:calc(100% + 8px);width:380px;max-width:calc(100vw - 48px);background:var(--bg-main-primary);box-shadow:var(--elevation-3);border-radius:var(--radius-sm);z-index:45;padding:var(--sp-layout-2);box-sizing:border-box;display:flex;flex-direction:column;gap:var(--sp-adjust-2)">
+                  <div style="font-size:var(--fs-up-1);font-weight:600">Notificações</div>
+                  <sc-for list="{{ notificacoes }}" as="n" hint-placeholder-count="2">
+                    <a href="{{ n.href }}" style="text-decoration:none;color:var(--fg-primary);display:block">
+                      <x-import component-from-global-scope="GOVBRDesignSystem_783538.Notification" title="{{ n.titulo }}" type="{{ n.tipo }}" hint-size="100%,72px">{{ n.txt }}</x-import>
+                    </a>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+            <div style="position:relative">
+              <button type="button" aria-expanded="{{ userAberto }}" onClick="{{ toggleUser }}" style="height:40px;display:flex;align-items:center;gap:var(--sp-layout-1);padding:0 var(--sp-adjust-2) 0 0;border:0;border-radius:100em;background:transparent;cursor:pointer;font-family:var(--font-primary);color:var(--interactive);font-size:var(--fs-base);font-weight:600" style-hover="background:var(--br-blue-warm-vivid-5)">
+                <x-import component-from-global-scope="GOVBRDesignSystem_783538.Avatar" size="medium" hint-size="40px,40px"></x-import>
+                <span style="white-space:nowrap">Membro da Cipa</span>
+                <i class="{{ userChevron }}" style="font-size:12px"></i>
+              </button>
+              <sc-if value="{{ userAberto }}" hint-placeholder-val="{{ false }}">
+                <div style="white-space:normal;position:absolute;right:0;top:calc(100% + 8px);width:280px;background:var(--bg-main-primary);box-shadow:var(--elevation-3);border-radius:var(--radius-sm);z-index:45;padding:var(--sp-layout-1);box-sizing:border-box">
+                  <div style="padding:var(--sp-adjust-2) var(--sp-layout-2);display:flex;flex-direction:column;gap:2px">
+                    <span style="font-weight:600">Membro da Cipa</span>
+                    <span style="font-size:var(--fs-down-1);color:var(--fg-secondary)">Conectado com a conta gov.br</span>
+                  </div>
+                  <x-import component-from-global-scope="GOVBRDesignSystem_783538.Divider" hint-size="100%,1px"></x-import>
+                  <x-import component-from-global-scope="GOVBRDesignSystem_783538.Menu" items="{{ userMenu }}" active-href="{{ hashAtual }}" hint-size="100%,96px"></x-import>
+                  <x-import component-from-global-scope="GOVBRDesignSystem_783538.Divider" hint-size="100%,1px"></x-import>
+                  <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="tertiary" block="{{ true }}" icon="arrow-right-from-bracket" onClick="{{ sair }}" hint-size="100%,40px">Sair</x-import>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:var(--sp-adjust-2) var(--sp-layout-3);padding:var(--sp-adjust-1) 0 var(--sp-adjust-3);flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:var(--sp-layout-1);flex:1 1 380px;min-width:0">
+          <button type="button" aria-label="Abrir menu" aria-expanded="{{ menu }}" onClick="{{ toggleMenu }}" style="width:40px;height:40px;border-radius:50%;border:0;background:transparent;color:var(--interactive);cursor:pointer;font-size:20px;flex-shrink:0" style-hover="background:var(--br-blue-warm-vivid-5)"><i class="fa-solid fa-bars"></i></button>
+          <a href="#/" style="font-size:var(--fs-up-3);line-height:1.3;color:var(--fg-primary);text-decoration:none;text-wrap:balance">Codevasf — Mapa de Risco Digital da Cipa</a>
+        </div>
+        <div style="position:relative;flex:0 1 440px;min-width:260px">
+          <div style="display:flex;align-items:center;height:48px;background:var(--bg-main-secondary);border-radius:var(--radius-sm);padding:0 var(--sp-layout-1) 0 var(--sp-layout-2);gap:var(--sp-layout-1)">
+            <input type="search" aria-label="Buscar setor, sigla, risco ou página" placeholder="Buscar setor, sigla ou risco" value="{{ q }}" onChange="{{ onBusca }}" onKeyDown="{{ onBuscaTecla }}" style="flex:1;min-width:0;border:0;background:transparent;height:100%;font-family:var(--font-primary);font-size:var(--fs-base);font-style:italic;color:var(--fg-primary);outline:none">
+            <i class="fa-solid fa-magnifying-glass" style="color:var(--interactive);font-size:18px;padding:0 var(--sp-layout-1)"></i>
+          </div>
+          <sc-if value="{{ hasQ }}" hint-placeholder-val="{{ false }}">
+            <div role="listbox" style="position:absolute;left:0;right:0;top:100%;margin-top:var(--sp-adjust-1);background:var(--bg-main-primary);box-shadow:var(--elevation-3);border-radius:var(--radius-sm);z-index:50;overflow:hidden">
+              <sc-for list="{{ resultados }}" as="r" hint-placeholder-count="3">
+                <a href="{{ r.href }}" role="option" style="display:flex;align-items:center;gap:var(--sp-adjust-2);padding:var(--sp-adjust-2) var(--sp-layout-2);border-top:1px solid var(--border-primary);text-decoration:none;color:var(--fg-primary);background:{{ r.fundo }}" style-hover="background:var(--bg-main-secondary)">
+                  <i class="{{ r.icone }}" style="width:16px;text-align:center;color:var(--fg-secondary)"></i>
+                  <span style="font-weight:600;font-size:var(--fs-down-1);color:var(--interactive);min-width:84px">{{ r.sigla }}</span>
+                  <span style="flex:1;min-width:0;font-size:var(--fs-base);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="{{ r.nome }}">{{ r.nome }}</span>
+                  <span style="font-size:var(--fs-down-2);color:var(--fg-secondary);white-space:nowrap">{{ r.andarNome }}</span>
+                </a>
+              </sc-for>
+              <sc-if value="{{ semResultado }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;gap:var(--sp-layout-2);align-items:center;padding:var(--sp-layout-2)">
+                  <img src="assets/ilustracoes/empty-space-20.png" alt="" style="width:72px;height:72px;object-fit:contain">
+                  <div style="display:flex;flex-direction:column;gap:var(--sp-adjust-1)">
+                    <span style="font-weight:600">Nenhum resultado para “{{ q }}”</span>
+                    <span style="font-size:var(--fs-down-1);color:var(--fg-secondary);line-height:1.4">Tente a sigla do setor, como AA/GGP, ou o nome de um risco, como poeira.</span>
+                  </div>
+                </div>
+              </sc-if>
+              <div style="padding:var(--sp-layout-1) var(--sp-layout-2);border-top:1px solid var(--border-primary);font-size:var(--fs-down-2);color:var(--fg-secondary)">Enter abre o primeiro resultado · Esc limpa a busca</div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <sc-if value="{{ ddAberto }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ fecharDd }}" style="position:fixed;inset:0;z-index:35"></div>
+  </sc-if>
+
+  <div data-noprint="1" onClick="{{ fecharMenu }}" style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:80;opacity:{{ menuOp }};pointer-events:{{ menuPe }};transition:opacity var(--dur-moderate-2) var(--ease)"></div>
+  <aside data-noprint="1" aria-label="Menu principal" aria-hidden="{{ menuOculto }}" style="position:fixed;left:0;top:0;bottom:0;width:320px;max-width:86vw;background:var(--bg-main-primary);box-shadow:var(--elevation-4);z-index:81;transform:{{ menuT }};visibility:{{ menuVis }};transition:transform var(--dur-moderate-2) var(--ease-out), visibility 0s linear {{ menuVisAtraso }};display:flex;flex-direction:column;overflow-y:auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--sp-layout-2) var(--sp-layout-2) var(--sp-layout-1) var(--sp-layout-3)">
+      <sc-if value="{{ semContraste }}" hint-placeholder-val="{{ true }}"><img src="assets/govbr.svg" alt="gov.br" style="height:28px"></sc-if><sc-if value="{{ contraste }}" hint-placeholder-val="{{ false }}"><img src="assets/govbr-negativa.svg" alt="gov.br" style="height:28px"></sc-if>
+      <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="tertiary" circle="{{ true }}" icon="xmark" aria-label="Fechar menu" onClick="{{ fecharMenu }}" hint-size="40px,40px"></x-import>
+    </div>
+    <div style="padding:0 var(--sp-layout-3) var(--sp-adjust-2);font-size:var(--fs-down-1);color:var(--fg-secondary)">Mapa de Risco Digital · Cipa Codevasf</div>
+    <sc-for list="{{ menuGrupos }}" as="mg" hint-placeholder-count="3">
+      <div style="padding:var(--sp-adjust-2) var(--sp-layout-1);border-top:1px solid var(--border-primary)">
+        <div style="padding:var(--sp-adjust-1) var(--sp-layout-2) var(--sp-layout-1);font-size:var(--fs-down-1);font-weight:600;color:var(--fg-secondary)">{{ mg.titulo }}</div>
+        <x-import component-from-global-scope="GOVBRDesignSystem_783538.Menu" items="{{ mg.itens }}" active-href="{{ hashAtual }}" hint-size="100%,120px"></x-import>
+      </div>
+    </sc-for>
+  </aside>
+
+  <div id="conteudo" tabindex="-1" style="flex:1;display:flex;flex-direction:column;outline:none">
+  <sc-if value="{{ carregando }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:var(--sp-layout-10)"><x-import component-from-global-scope="GOVBRDesignSystem_783538.Loading" label="Carregando o mapa de risco" hint-size="220px,32px"></x-import></div>
+  </sc-if>
+
+  <sc-if value="{{ isInicio }}" hint-placeholder-val="{{ true }}">
+    <main style="flex:1;width:100%;max-width:1200px;margin:0 auto;padding:var(--sp-layout-5) var(--sp-layout-3) var(--sp-layout-8);box-sizing:border-box;display:flex;flex-direction:column;gap:var(--sp-layout-7)">
+      <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:var(--sp-layout-5);align-items:center">
+        <div style="display:flex;flex-direction:column;gap:var(--sp-adjust-3)">
+          <div style="font-size:var(--fs-down-1);font-weight:600;color:var(--interactive)">Cipa · Edifício-sede da Codevasf</div>
+          <h1 style="margin:0;font-size:var(--fs-up-8);line-height:1.15;font-weight:700;text-wrap:balance">Mapa de Risco Digital</h1>
+          <p style="margin:0;font-size:var(--fs-up-1);line-height:1.5;color:var(--fg-secondary);max-width:520px;text-wrap:pretty">Consulte os riscos identificados em cada pavimento do edifício-sede, veja as medidas de prevenção e os EPIs indicados e comunique situações de risco à Cipa.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:var(--sp-adjust-2)">
+            <a href="#/andar/p2" style="text-decoration:none"><x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="primary" icon="layer-group" hint-size="220px,40px">Explorar os pavimentos</x-import></a>
+            <a href="#/comunicar" style="text-decoration:none"><x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="secondary" icon="triangle-exclamation" hint-size="200px,40px">Comunicar um risco</x-import></a>
+          </div>
+        </div>
+
+        <div aria-label="Edifício-sede em 3D. Selecione um pavimento." style="position:relative;height:540px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:110px;box-sizing:border-box;overflow:hidden">
+          <div style="position:relative;width:240px;height:240px;transform:scale({{ predioEscala }}) translateX(-50px) rotateX(60deg) rotateZ(-45deg);transform-style:preserve-3d">
+            <sc-for list="{{ predio }}" as="f" hint-placeholder-count="5">
+              <div role="button" tabindex="0" aria-label="{{ f.aria }}" onClick="{{ f.abrir }}" onKeyDown="{{ f.tecla }}" onMouseEnter="{{ f.enter }}" onMouseLeave="{{ sairAndar }}" onFocus="{{ f.enter }}" onBlur="{{ sairAndar }}" style="position:absolute;inset:0;transform:translateZ({{ f.z }}px);transition:transform var(--dur-slow-1) var(--ease-out);transform-style:preserve-3d;cursor:pointer;outline:none">
+                <div style="position:absolute;inset:0;background:#fff;border:2px solid {{ f.borda }};box-sizing:border-box;opacity:{{ f.op }};transition:opacity var(--dur-moderate-1),border-color var(--dur-moderate-1)">
+                  <div style="position:absolute;left:{{ f.nx }}%;top:{{ f.ny }}%;width:{{ f.nw }}%;height:{{ f.nh }}%;background:var(--br-gray-10)"></div>
+                  <sc-for list="{{ f.mini }}" as="m" hint-placeholder-count="8">
+                    <div style="position:absolute;left:{{ m.x }}%;top:{{ m.y }}%;width:{{ m.w }}%;height:{{ m.h }}%;border:1px solid var(--br-gray-30);box-sizing:border-box;display:flex;flex-wrap:wrap;gap:2px;align-items:center;justify-content:center;align-content:center;padding:2px">
+                      <sc-for list="{{ m.dots }}" as="d" hint-placeholder-count="2">
+                        <div style="width:{{ d.px }}px;height:{{ d.px }}px;border-radius:50%;background:{{ d.cor }}"></div>
+                      </sc-for>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="position:absolute;left:0;top:100%;width:100%;height:10px;background:var(--br-gray-20);transform-origin:top;transform:rotateX(-90deg)"></div>
+                <div style="position:absolute;left:0;top:0;width:10px;height:100%;background:var(--br-gray-30);transform-origin:left;transform:rotateY(90deg)"></div>
+                <div style="position:absolute;left:100%;top:100%;transform-origin:0 0;transform:rotateZ(45deg) rotateX(-60deg) translate(24px,-34px);white-space:nowrap;pointer-events:none">
+                  <div style="font-size:var(--fs-base);font-weight:700;color:{{ f.corLabel }}">{{ f.nome }}</div>
+                  <div style="font-size:var(--fs-down-2);color:var(--fg-secondary)">{{ f.resumo }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="position:absolute;bottom:var(--sp-layout-2);left:0;right:0;text-align:center;font-size:var(--fs-down-1);color:var(--fg-secondary)">Passe o mouse ou use Tab para escolher um pavimento. Clique ou tecle Enter para abrir.</div>
+        </div>
+      </section>
+
+      <section aria-label="Acesso rápido" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:0 var(--sp-layout-2)">
+        <sc-for list="{{ atalhos }}" as="a" hint-placeholder-count="4">
+          <a href="{{ a.href }}" style="text-decoration:none;color:var(--fg-primary);display:block">
+            <x-import component-from-global-scope="GOVBRDesignSystem_783538.Card" hover="{{ true }}" hint-size="100%,150px">
+              <div style="display:flex;flex-direction:column;gap:var(--sp-adjust-2);min-height:112px">
+                <i class="{{ a.icone }}" style="font-size:24px;color:var(--interactive)"></i>
+                <span style="font-size:var(--fs-up-1);font-weight:600;line-height:1.3">{{ a.titulo }}</span>
+                <span style="font-size:var(--fs-down-1);line-height:1.45;color:var(--fg-secondary)">{{ a.desc }}</span>
+              </div>
+            </x-import>
+          </a>
+        </sc-for>
+      </section>
+
+      <section style="display:flex;flex-direction:column;gap:var(--sp-adjust-3)">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--sp-adjust-2)">
+          <h2 style="margin:0;font-size:var(--fs-up-4);font-weight:600">Como ler o mapa</h2>
+          <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="tertiary" icon="circle-play" onClick="{{ verTutorial }}" hint-size="150px,40px">Ver o tutorial</x-import>
+        </div>
+        <div style="background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);padding:var(--sp-layout-3);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:var(--sp-layout-3)">
+          <div style="display:flex;flex-direction:column;gap:var(--sp-adjust-2)">
+            <div style="font-size:var(--fs-down-1);font-weight:600;color:var(--fg-secondary)">Grupo de risco (cor)</div>
+            <sc-for list="{{ legenda }}" as="g" hint-placeholder-count="6">
+              <div style="display:flex;gap:var(--sp-adjust-2);align-items:flex-start">
+                <div style="width:18px;height:18px;border-radius:50%;background:{{ g.fundo }};border:2px {{ g.estiloBorda }} {{ g.borda }};flex-shrink:0;margin-top:2px;box-sizing:border-box"></div>
+                <div style="display:flex;flex-direction:column;gap:2px">
+                  <div style="font-weight:600;font-size:var(--fs-base)">{{ g.nome }} <span style="font-weight:400;font-size:var(--fs-down-2);color:var(--interactive)">{{ g.selo }}</span></div>
+                  <div style="font-size:var(--fs-down-1);color:var(--fg-secondary)">{{ g.exemplos }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:var(--sp-adjust-2)">
+            <div style="font-size:var(--fs-down-1);font-weight:600;color:var(--fg-secondary)">Grau de risco (tamanho)</div>
+            <div style="display:flex;align-items:flex-end;gap:var(--sp-adjust-4);padding:var(--sp-layout-1) 0">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:var(--sp-layout-1)"><div style="width:14px;height:14px;border-radius:50%;border:2px solid var(--fg-primary)"></div><span style="font-size:var(--fs-down-1)">Pequeno</span></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:var(--sp-layout-1)"><div style="width:24px;height:24px;border-radius:50%;border:2px solid var(--fg-primary)"></div><span style="font-size:var(--fs-down-1)">Médio</span></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:var(--sp-layout-1)"><div style="width:36px;height:36px;border-radius:50%;border:2px solid var(--fg-primary)"></div><span style="font-size:var(--fs-down-1)">Grande</span></div>
+            </div>
+            <p style="margin:0;font-size:var(--fs-down-1);line-height:1.5;color:var(--fg-secondary);text-wrap:pretty">Cada círculo representa um grupo de risco presente no local. Quanto maior o círculo, maior o grau de risco. Cores e tamanhos seguem a convenção do mapa de risco adotada pela Cipa.</p>
+            <a href="#/normas" style="font-size:var(--fs-down-1);font-weight:600">Normas e metodologia</a>
+          </div>
+        </div>
+      </section>
+
+      <section style="display:flex;flex-direction:column;gap:var(--sp-adjust-3)">
+        <h2 style="margin:0;font-size:var(--fs-up-4);font-weight:600">Pavimentos</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr));gap:0 var(--sp-layout-2)">
+          <sc-for list="{{ cardsAndar }}" as="c" hint-placeholder-count="5">
+            <a href="{{ c.href }}" style="text-decoration:none;color:var(--fg-primary);display:block">
+              <x-import component-from-global-scope="GOVBRDesignSystem_783538.Card" hover="{{ true }}" hint-size="100%,130px">
+                <div style="display:flex;flex-direction:column;gap:var(--sp-adjust-2)">
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:var(--sp-layout-1)">
+                    <span style="font-size:var(--fs-up-2);font-weight:700">{{ c.nome }}</span>
+                    <i class="fa-solid fa-chevron-right" style="color:var(--interactive)"></i>
+                  </div>
+                  <div style="font-size:var(--fs-down-1);color:var(--fg-secondary)">{{ c.resumo }}</div>
+                  <div style="display:flex;flex-wrap:wrap;gap:var(--sp-adjust-2)">
+                    <sc-for list="{{ c.grupos }}" as="g" hint-placeholder-count="4">
+                      <span title="{{ g.titulo }}" style="display:flex;align-items:center;gap:var(--sp-adjust-1);font-size:var(--fs-down-2);color:var(--fg-secondary)"><span style="width:10px;height:10px;border-radius:50%;background:{{ g.cor }}"></span>{{ g.n }}</span>
+                    </sc-for>
+                  </div>
+                </div>
+              </x-import>
+            </a>
+          </sc-for>
+        </div>
+      </section>
+
+      <section style="background:var(--bg-contrast-primary);color:var(--fg-contrast-primary);border-radius:var(--radius-sm);padding:var(--sp-layout-4);display:flex;flex-wrap:wrap;gap:var(--sp-layout-3);align-items:center;justify-content:space-between">
+        <div style="display:flex;flex-direction:column;gap:var(--sp-layout-1);max-width:640px">
+          <h2 style="margin:0;font-size:var(--fs-up-4);font-weight:600">Encontrou uma situação de risco?</h2>
+          <p style="margin:0;font-size:var(--fs-base);line-height:1.5;color:var(--fg-contrast-secondary)">Comunique à Cipa riscos, quase-acidentes ou acidentes no seu local de trabalho. Você pode enviar de forma anônima e acompanhar pelo número de protocolo.</p>
+        </div>
+        <x-import component-from-global-scope="GOVBRDesignSystem_783538.CallToAction" onClick="{{ irComunicar }}" hint-size="240px,60px">Comunicar à Cipa</x-import>
+      </section>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isAndar }}" hint-placeholder-val="{{ false }}">
+    <main style="flex:1;width:100%;max-width:1320px;margin:0 auto;padding:var(--sp-layout-3) var(--sp-layout-3) var(--sp-layout-8);box-sizing:border-box;display:flex;flex-direction:column;gap:var(--sp-adjust-3)">
+      <div data-noprint="1"><div style="white-space:nowrap;overflow-x:auto"><x-import component-from-global-scope="GOVBRDesignSystem_783538.Breadcrumb" items="{{ migalhas }}" hint-size="100%,20px"></x-import></div></div>
+      <div data-noprint="1" style="display:flex;flex-wrap:wrap;gap:var(--sp-layout-2);align-items:flex-end;justify-content:space-between">
+        <div style="display:flex;flex-direction:column;gap:var(--sp-adjust-1)">
+          <h1 style="margin:0;font-size:var(--fs-up-7);font-weight:700">{{ andar.nome }}</h1>
+          <div style="font-size:var(--fs-base);color:var(--fg-secondary)">{{ andar.resumo }}</div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:var(--sp-layout-1)">
+          <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="{{ v2d }}" size="small" icon="map" aria-pressed="{{ is2d }}" onClick="{{ set2d }}" hint-size="80px,32px">2D</x-import>
+          <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="{{ v3d }}" size="small" icon="cube" aria-pressed="{{ modo3d }}" onClick="{{ set3d }}" hint-size="80px,32px">3D</x-import>
+          <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="secondary" size="small" icon="qrcode" onClick="{{ abrirQR }}" hint-size="110px,32px">QR code</x-import>
+          <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="secondary" size="small" icon="print" onClick="{{ imprimir }}" hint-size="160px,32px">Imprimir / PDF</x-import>
+        </div>
+      </div>
+
+      <div data-noprint="1" class="br-tab" role="tablist" aria-label="Pavimentos" style="overflow-x:auto;overflow-y:hidden;white-space:nowrap">
+        <sc-for list="{{ abas }}" as="t" hint-placeholder-count="5">
+          <x-import component-from-global-scope="GOVBRDesignSystem_783538.TabItem" label="{{ t.nome }}" active="{{ t.ativo }}" onClick="{{ t.abrir }}" hint-size="150px,50px"></x-import>
+        </sc-for>
+      </div>
+
+      <div data-noprint="1" style="display:flex;flex-wrap:wrap;gap:var(--sp-layout-1);align-items:center">
+        <span style="font-size:var(--fs-down-1);font-weight:600;color:var(--fg-secondary);margin-right:var(--sp-adjust-1)">Filtrar por grupo:</span>
+        <sc-for list="{{ filtros }}" as="g" hint-placeholder-count="5">
+          <x-import component-from-global-scope="GOVBRDesignSystem_783538.Tooltip" text="{{ g.exemplos }}" hint-size="130px,32px">
+            <button type="button" onClick="{{ g.toggle }}" aria-pressed="{{ g.ativo }}" style="display:inline-flex;align-items:center;gap:var(--sp-layout-1);height:32px;padding:0 14px;border-radius:100em;border:1px solid {{ g.chipBorda }};background:{{ g.chipFundo }};color:var(--fg-primary);font-family:var(--font-primary);font-size:var(--fs-down-1);font-weight:600;cursor:pointer;opacity:{{ g.chipOp }};transition:background var(--dur-fast-4) var(--ease),opacity var(--dur-fast-4) var(--ease)">
+              <span style="width:12px;height:12px;border-radius:50%;background:{{ g.cor }};border:1px solid {{ g.borda }}"></span>{{ g.nome }}<span style="font-weight:400;color:var(--fg-secondary)">{{ g.n }}</span>
+            </button>
+          </x-import>
+        </sc-for>
+        <span style="width:1px;height:24px;background:var(--border-secondary);margin:0 var(--sp-adjust-1)"></span>
+        <button type="button" onClick="{{ toggleAlto }}" aria-pressed="{{ soAlto }}" style="display:inline-flex;align-items:center;gap:var(--sp-layout-1);height:32px;padding:0 14px;border-radius:100em;border:1px solid {{ altoBorda }};background:{{ altoFundo }};color:var(--fg-primary);font-family:var(--font-primary);font-size:var(--fs-down-1);font-weight:600;cursor:pointer;white-space:nowrap"><i class="{{ altoIcone }}" style="color:var(--interactive)"></i>Somente grau grande</button>
+        <sc-if value="{{ filtrosAtivos }}" hint-placeholder-val="{{ false }}">
+          <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="tertiary" size="small" icon="xmark" onClick="{{ limparFiltros }}" hint-size="140px,32px">Limpar filtros</x-import>
+        </sc-if>
+      </div>
+
+      <div data-printonly="1" style="display:none;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #1B1B1B;padding-bottom:8px">
+        <div><div style="font-size:12pt;font-weight:600">Codevasf · Cipa — Mapa de Risco</div><div style="font-size:22pt;font-weight:700">{{ andar.nome }}</div></div>
+        <div style="font-size:10pt;color:#555">Consulte a versão interativa pelo QR code do pavimento</div>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:var(--sp-layout-3);align-items:flex-start">
+        <div data-printplan="1" style="flex:999 1 560px;min-width:0;background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);padding:var(--sp-layout-3);box-sizing:border-box;display:flex;flex-direction:column;gap:var(--sp-adjust-2)">
+          <sc-if value="{{ planoVazio }}" hint-placeholder-val="{{ false }}">
+            <div data-noprint="1"><x-import component-from-global-scope="GOVBRDesignSystem_783538.Message" type="info" hint-size="100%,48px">Nenhum local corresponde aos filtros selecionados. Use “Limpar filtros” para ver todos os setores.</x-import></div>
+          </sc-if>
+          <div onPointerDown="{{ planDown }}" style="position:relative;width:100%;max-width:760px;margin:0 auto;aspect-ratio:{{ aspecto }};perspective:2200px;cursor:{{ cursor }};touch-action:{{ toque }};transition:aspect-ratio var(--dur-slow-1);user-select:none">
+            <div style="position:absolute;left:0;top:50%;width:100%;aspect-ratio:1;transform:{{ planT }};transform-style:preserve-3d;transition:transform var(--dur-slow-1) var(--ease-out)">
+              <div style="position:absolute;inset:-8px;background:var(--br-gray-20);transform:translateZ(-1px)"></div>
+              <div style="position:absolute;inset:0;background:#fff;border:3px solid #333;box-sizing:border-box"></div>
+              <div style="position:absolute;left:{{ nucleo.x }}%;top:{{ nucleo.y }}%;width:{{ nucleo.w }}%;height:{{ nucleo.h }}%;background:var(--br-gray-5);border:1px solid var(--br-gray-40);box-sizing:border-box;display:flex">
+                <div style="flex:10;border-right:1px solid var(--br-gray-30);background:repeating-linear-gradient(90deg,var(--br-gray-5) 0 5px,var(--br-gray-20) 5px 6px)"></div>
+                <div style="flex:16;border-right:1px solid var(--br-gray-30);display:flex;align-items:center;justify-content:center;font-size:10px;color:#555;text-align:center">Sanitários</div>
+                <div style="flex:38;border-right:1px solid var(--br-gray-30);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--br-green-cool-vivid-60);background:var(--br-green-cool-vivid-5);text-align:center">Jardim interno</div>
+                <div style="flex:16;border-right:1px solid var(--br-gray-30);display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;font-size:10px;color:#555;text-align:center">Elevadores</div>
+                <div style="flex:10;border-right:1px solid var(--br-gray-30)"></div>
+                <div style="flex:10;background:repeating-linear-gradient(90deg,var(--br-gray-5) 0 5px,var(--br-gray-20) 5px 6px)"></div>
+              </div>
+              <sc-for list="{{ salas }}" as="s" hint-placeholder-count="10">
+                <div role="button" tabindex="0" aria-label="{{ s.aria }}" onClick="{{ s.abrir }}" onKeyDown="{{ s.tecla }}" onMouseEnter="{{ s.enter }}" onMouseLeave="{{ s.leave }}" onFocus="{{ s.enter }}" onBlur="{{ s.leave }}" style="position:absolute;left:{{ s.x }}%;top:{{ s.y }}%;width:{{ s.w }}%;height:{{ s.h }}%;box-sizing:border-box;border:1px solid var(--br-gray-50);outline:{{ s.contorno }};outline-offset:-3px;background:{{ s.fundo }};opacity:{{ s.op }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:4px;cursor:pointer;transform-style:preserve-3d;transition:background var(--dur-fast-3),opacity var(--dur-moderate-1);overflow:visible" style-hover="background:var(--br-blue-warm-vivid-5)" style-focus="outline:3px solid var(--focus)">
+                  <div style="font-size:11px;line-height:1.2;font-weight:600;color:#333;text-align:center;word-break:break-word;transform:{{ labelT }};transition:transform var(--dur-slow-1)">{{ s.sigla }}</div>
+                  <div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;align-items:flex-end;max-width:100%;transform-style:preserve-3d">
+                    <sc-for list="{{ s.dots }}" as="d" hint-placeholder-count="2">
+                      <div title="{{ d.titulo }}" style="width:{{ d.px }}px;height:{{ d.px }}px;border-radius:50%;background:{{ d.cor }};border:1px solid {{ d.borda }};box-sizing:border-box;flex-shrink:0;transform-origin:50% 100%;transform:{{ dotT }};transition:transform var(--dur-slow-1);box-shadow:{{ dotSombra }}"></div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-for>
+              <sc-if value="{{ tip.show }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;left:{{ tip.x }}%;top:{{ tip.y }}%;transform:{{ tip.t }};background:var(--bg-contrast-primary);color:var(--fg-contrast-primary);border-radius:var(--radius-sm);padding:10px 12px;width:230px;box-sizing:border-box;line-height:1.35;pointer-events:none;z-index:5;box-shadow:var(--elevation-3);display:flex;flex-direction:column;gap:6px">
+                  <div style="font-size:var(--fs-down-2);font-weight:600;color:var(--br-blue-warm-vivid-20)">{{ tip.sigla }}</div>
+                  <div style="font-size:var(--fs-down-1);font-weight:600;line-height:1.3">{{ tip.nome }}</div>
+                  <sc-for list="{{ tip.grupos }}" as="g" hint-placeholder-count="2">
+                    <div style="display:flex;align-items:center;gap:6px;font-size:var(--fs-down-2);line-height:1.35;white-space:nowrap"><span style="width:10px;height:10px;border-radius:50%;background:{{ g.cor }};flex-shrink:0"></span>{{ g.txt }}</div>
+                  </sc-for>
+                  <div style="font-size:var(--fs-down-2);color:var(--fg-contrast-secondary)">Clique para ver a ficha</div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+          <sc-if value="{{ modo3d }}" hint-placeholder-val="{{ false }}">
+            <div data-noprint="1" style="display:flex;flex-wrap:wrap;gap:var(--sp-layout-1);align-items:center;justify-content:center">
+              <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="tertiary" size="small" circle="{{ true }}" icon="rotate-left" aria-label="Girar à esquerda" onClick="{{ girarE }}" hint-size="32px,32px"></x-import>
+              <span style="font-size:var(--fs-down-1);color:var(--fg-secondary)">Arraste a planta ou use os botões para girar</span>
+              <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="tertiary" size="small" circle="{{ true }}" icon="rotate-right" aria-label="Girar à direita" onClick="{{ girarD }}" hint-size="32px,32px"></x-import>
+            </div>
+          </sc-if>
+          <div style="display:flex;flex-wrap:wrap;gap:var(--sp-layout-1) var(--sp-adjust-3);align-items:center;padding-top:var(--sp-adjust-2);border-top:1px solid var(--border-primary)">
+            <sc-for list="{{ legenda }}" as="g" hint-placeholder-count="6">
+              <span style="display:flex;align-items:center;gap:6px;font-size:var(--fs-down-1)"><span style="width:12px;height:12px;border-radius:50%;background:{{ g.fundo }};border:2px {{ g.estiloBorda }} {{ g.borda }};box-sizing:border-box"></span>{{ g.nome }}</span>
+            </sc-for>
+            <span style="display:flex;align-items:center;gap:6px;font-size:var(--fs-down-1);color:var(--fg-secondary);margin-left:auto">Grau:<span style="width:10px;height:10px;border-radius:50%;border:1.5px solid var(--fg-primary)"></span>pequeno<span style="width:16px;height:16px;border-radius:50%;border:1.5px solid var(--fg-primary)"></span>médio<span style="width:22px;height:22px;border-radius:50%;border:1.5px solid var(--fg-primary)"></span>grande</span>
+          </div>
+        </div>
+
+        <aside data-noprint="1" ref="{{ fichaRef }}" style="flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:var(--sp-layout-2);scroll-margin-top:16px">
+          <sc-if value="{{ semFicha }}" hint-placeholder-val="{{ true }}">
+            <div style="background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);overflow:hidden">
+              <div style="padding:var(--sp-layout-2) var(--sp-layout-2) var(--sp-adjust-2);display:flex;flex-direction:column;gap:var(--sp-adjust-1)">
+                <h2 style="margin:0;font-size:var(--fs-up-2);font-weight:600">Setores neste pavimento</h2>
+                <div style="font-size:var(--fs-down-1);color:var(--fg-secondary)">Selecione um setor na planta ou na lista para ver a ficha de risco. Os setores com maior grau aparecem primeiro.</div>
+              </div>
+              <div class="br-list" role="list" style="border-top:1px solid var(--border-primary)">
+                <sc-for list="{{ lista }}" as="s" hint-placeholder-count="8">
+                  <a href="{{ s.href }}" class="br-item" role="listitem" style="text-decoration:none;color:var(--fg-primary);opacity:{{ s.op }}">
+                    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+                      <span style="font-size:var(--fs-down-1);font-weight:600;color:var(--interactive)">{{ s.sigla }}</span>
+                      <span style="font-size:var(--fs-base);line-height:1.3">{{ s.nome }}</span>
+                    </div>
+                    <div style="display:flex;gap:3px;align-items:flex-end">
+                      <sc-for list="{{ s.dots }}" as="d" hint-placeholder-count="2">
+                        <span style="width:{{ d.px }}px;height:{{ d.px }}px;border-radius:50%;background:{{ d.cor }};border:1px solid {{ d.borda }};box-sizing:border-box"></span>
+                      </sc-for>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="font-size:12px;color:var(--fg-secondary)"></i>
+                  </a>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ temFicha }}" hint-placeholder-val="{{ false }}">
+            <div style="background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);display:flex;flex-direction:column">
+              <div style="padding:var(--sp-layout-2);display:flex;flex-direction:column;gap:var(--sp-adjust-2);border-bottom:1px solid var(--border-primary)">
+                <a href="{{ ficha.voltar }}" style="font-size:var(--fs-down-1);font-weight:600;text-decoration:none;display:flex;align-items:center;gap:6px"><i class="fa-solid fa-arrow-left"></i>Todos os setores</a>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <span style="font-size:var(--fs-down-1);font-weight:600;color:var(--interactive)">{{ ficha.sigla }} · {{ ficha.andarNome }}</span>
+                  <h2 style="margin:0;font-size:var(--fs-up-3);line-height:1.25;font-weight:600;text-wrap:balance">{{ ficha.nome }}</h2>
+                </div>
+                <div><span class="br-tag" style="background:{{ ficha.nivelFundo }};color:{{ ficha.nivelCor }};font-weight:600;white-space:nowrap">{{ ficha.nivel }}</span></div>
+              </div>
+
+              <div style="padding:var(--sp-layout-2);display:flex;flex-direction:column;gap:14px;border-bottom:1px solid var(--border-primary)">
+                <h3 style="margin:0;font-size:var(--fs-base);font-weight:600">Riscos identificados</h3>
+                <sc-for list="{{ ficha.grupos }}" as="g" hint-placeholder-count="3">
+                  <div style="display:flex;gap:var(--sp-adjust-2);align-items:flex-start">
+                    <div style="width:32px;display:flex;justify-content:center;flex-shrink:0"><div style="width:{{ g.px }}px;height:{{ g.px }}px;border-radius:50%;background:{{ g.cor }};border:1px solid {{ g.borda }};box-sizing:border-box"></div></div>
+                    <div style="flex:1;display:flex;flex-direction:column;gap:2px;min-width:0;line-height:1.4">
+                      <div style="font-size:var(--fs-base);font-weight:600">{{ g.nome }} <span style="font-weight:400;color:var(--fg-secondary);font-size:var(--fs-down-1)">· grau {{ g.grauTxt }}</span></div>
+                      <div style="font-size:var(--fs-down-1);color:var(--fg-secondary);line-height:1.4">{{ g.agentesTxt }}</div>
+                    </div>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ ficha.semRiscos }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;gap:var(--sp-adjust-2);align-items:center">
+                    <img src="assets/ilustracoes/empty-space-20.png" alt="" style="width:56px;height:56px;object-fit:contain">
+                    <span style="font-size:var(--fs-down-1);color:var(--fg-secondary);line-height:1.4">Nenhum risco ambiental significativo registrado neste local.</span>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ mostrarPsi }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;gap:var(--sp-adjust-2);align-items:flex-start">
+                    <div style="width:32px;display:flex;justify-content:center;flex-shrink:0"><div style="width:18px;height:18px;border-radius:50%;border:2px dashed var(--br-indigo-vivid-60);box-sizing:border-box"></div></div>
+                    <div style="flex:1;display:flex;flex-direction:column;gap:2px;min-width:0;line-height:1.4">
+                      <div style="font-size:var(--fs-base);font-weight:600">Psicossocial <span style="font-weight:400;color:var(--fg-secondary);font-size:var(--fs-down-1)">· em avaliação</span></div>
+                      <div style="font-size:var(--fs-down-1);color:var(--fg-secondary);line-height:1.4">Fatores psicossociais estão sendo avaliados conforme a NR-1. Situações de assédio podem ser comunicadas de forma sigilosa.</div>
+                    </div>
+                  </div>
+                </sc-if>
+              </div>
+
+              <div style="padding:var(--sp-layout-2);display:flex;flex-direction:column;gap:var(--sp-layout-1);border-bottom:1px solid var(--border-primary)">
+                <h3 style="margin:0;font-size:var(--fs-base);font-weight:600">Medidas preventivas e EPIs</h3>
+                <div class="br-accordion">
+                  <sc-for list="{{ ficha.medidas }}" as="m" hint-placeholder-count="3">
+                    <div class="accordion-section">
+                      <button type="button" class="accordion-header" onClick="{{ m.toggle }}" aria-expanded="{{ m.aberto }}" style="width:100%;background:none;border:0;font-family:var(--font-primary);font-size:var(--fs-base);text-align:left;gap:10px;padding:12px 4px">
+                        <span style="display:flex;align-items:center;gap:10px;flex:1;min-width:0"><span style="width:10px;height:10px;border-radius:50%;background:{{ m.cor }};border:1px solid {{ m.borda }};flex-shrink:0"></span><span>{{ m.nome }}</span></span>
+                        <span style="display:flex;align-items:center;gap:10px"><span class="br-tag" style="min-height:24px;font-size:var(--fs-down-2)">{{ m.nr }}</span><i class="{{ m.icone }}" style="font-size:12px;color:var(--interactive)"></i></span>
+                      </button>
+                      <sc-if value="{{ m.aberto }}" hint-placeholder-val="{{ false }}">
+                        <div class="accordion-panel" style="padding:0 4px 14px 24px;display:flex;flex-direction:column;gap:8px;font-size:var(--fs-down-1);line-height:1.5;color:var(--fg-primary)">
+                          <div><strong>Prevenção:</strong> {{ m.medida }}</div>
+                          <sc-if value="{{ m.temEpi }}" hint-placeholder-val="{{ false }}"><div><strong>EPI:</strong> {{ m.epi }}</div></sc-if>
+                        </div>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div style="padding:var(--sp-layout-2);display:flex;flex-direction:column;gap:var(--sp-layout-1)">
+                <a href="{{ ficha.comunicar }}" style="text-decoration:none"><x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="primary" block="{{ true }}" icon="triangle-exclamation" hint-size="100%,40px">Comunicar risco neste setor</x-import></a>
+                <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="tertiary" block="{{ true }}" icon="link" onClick="{{ copiarLink }}" hint-size="100%,40px">Copiar link desta ficha</x-import>
+              </div>
+            </div>
+          </sc-if>
+        </aside>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ qrAberto }}" hint-placeholder-val="{{ false }}">
+    <x-import component-from-global-scope="GOVBRDesignSystem_783538.Modal" title="{{ qrTitulo }}" onClose="{{ fecharQR }}" hint-size="400px,440px">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:var(--sp-layout-2);padding:var(--sp-layout-1) 0">
+        <div ref="{{ qrRef }}" style="width:240px;height:240px;background:#fff"></div>
+        <p style="margin:0;font-size:var(--fs-down-1);line-height:1.5;color:var(--fg-secondary);text-align:center">Afixe este código no hall do pavimento. Ao ler com a câmera do celular, o empregado abre direto a planta deste andar.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:var(--sp-layout-1);justify-content:center">
+          <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="secondary" size="small" icon="print" onClick="{{ imprimir }}" hint-size="180px,32px">Imprimir com a planta</x-import>
+          <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="tertiary" size="small" icon="link" onClick="{{ copiarLinkAndar }}" hint-size="130px,32px">Copiar link</x-import>
+        </div>
+      </div>
+    </x-import>
+  </sc-if>
+
+
+  <sc-if value="{{ isComunicar }}" hint-placeholder-val="{{ false }}">
+    <main style="flex:1;width:100%;max-width:1140px;margin:0 auto;padding:var(--sp-layout-3) var(--sp-layout-3) var(--sp-layout-8);box-sizing:border-box;display:flex;flex-direction:column;gap:var(--sp-layout-3)">
+      <div style="white-space:nowrap;overflow-x:auto"><x-import component-from-global-scope="GOVBRDesignSystem_783538.Breadcrumb" items="{{ migalhasCom }}" hint-size="100%,20px"></x-import></div>
+      <div style="display:flex;flex-direction:column;gap:var(--sp-layout-1);max-width:720px">
+        <h1 style="margin:0;font-size:var(--fs-up-7);font-weight:700">Comunicar risco à Cipa</h1>
+        <p style="margin:0;font-size:var(--fs-up-1);line-height:1.5;color:var(--fg-secondary)">Informe situações de risco, quase-acidentes, acidentes ou assédio. A Cipa analisa cada comunicação e atualiza o mapa quando necessário.</p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:var(--sp-layout-4);align-items:flex-start">
+        <div style="flex:999 1 560px;min-width:0;display:flex;flex-direction:column;gap:var(--sp-adjust-3)">
+          <x-import component-from-global-scope="GOVBRDesignSystem_783538.Message" type="warning" hint-size="100%,48px">Em emergência, ligue 193 (Corpo de Bombeiros) ou 192 (Samu) e acione a brigada do prédio.</x-import>
+
+          <sc-if value="{{ enviado }}" hint-placeholder-val="{{ false }}">
+            <div style="background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);padding:var(--sp-layout-5) var(--sp-layout-4);display:flex;flex-direction:column;gap:var(--sp-layout-2);align-items:center;text-align:center">
+              <img src="assets/ilustracoes/empty-space-00.png" alt="" style="width:180px;height:180px;object-fit:contain">
+              <h2 style="margin:0;font-size:var(--fs-up-4);font-weight:600">Comunicação registrada</h2>
+              <div style="display:flex;flex-direction:column;gap:var(--sp-adjust-1);align-items:center">
+                <span style="font-size:var(--fs-down-1);color:var(--fg-secondary)">Número de protocolo</span>
+                <span style="font-family:var(--font-secondary);font-size:var(--fs-up-4);font-weight:700;letter-spacing:.02em">{{ protocolo }}</span>
+              </div>
+              <p style="margin:0;font-size:var(--fs-base);line-height:1.5;max-width:460px;color:var(--fg-secondary)">{{ retornoTxt }}</p>
+              <div style="display:flex;flex-wrap:wrap;gap:var(--sp-adjust-2);justify-content:center">
+                <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="primary" icon="magnifying-glass" onClick="{{ acompanharEnviado }}" hint-size="230px,40px">Acompanhar comunicação</x-import>
+                <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="secondary" icon="copy" onClick="{{ copiarProtocolo }}" hint-size="190px,40px">Copiar protocolo</x-import>
+                <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="tertiary" onClick="{{ novaCom }}" hint-size="200px,40px">Fazer outra comunicação</x-import>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ naoEnviado }}" hint-placeholder-val="{{ true }}">
+            <div style="background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);padding:var(--sp-layout-3);display:flex;flex-direction:column;gap:var(--sp-layout-3)">
+              <x-import component-from-global-scope="GOVBRDesignSystem_783538.Wizard" steps="{{ wizPassos }}" current="{{ wizI }}" hint-size="100%,420px">
+                <sc-if value="{{ w0 }}" hint-placeholder-val="{{ true }}">
+                  <fieldset aria-labelledby="tit-tipo" style="border:0;margin:0;padding:0;min-width:0;display:flex;flex-direction:column;gap:var(--sp-adjust-2)">
+                    <h2 id="tit-tipo" style="margin:0 0 var(--sp-adjust-1);font-size:var(--fs-up-2);font-weight:600">O que você quer comunicar?</h2>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:var(--sp-adjust-2)">
+                      <sc-for list="{{ tipos }}" as="t" hint-placeholder-count="4">
+                        <div onClick="{{ t.escolher }}" style="border:{{ t.borda }};border-radius:var(--radius-md);padding:{{ t.pad }};background:{{ t.fundo }};cursor:pointer;display:flex;flex-direction:column;gap:var(--sp-layout-1);transition:background var(--dur-fast-4) var(--ease)">
+                          <x-import component-from-global-scope="GOVBRDesignSystem_783538.Radio" name="tipo" label="{{ t.label }}" checked="{{ t.checked }}" onChange="{{ t.escolher }}" hint-size="100%,24px"></x-import>
+                          <span style="font-size:var(--fs-down-1);line-height:1.45;color:var(--fg-secondary);padding-left:32px">{{ t.desc }}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                    <sc-if value="{{ isAssedio }}" hint-placeholder-val="{{ false }}">
+                      <x-import component-from-global-scope="GOVBRDesignSystem_783538.Message" type="info" hint-size="100%,64px">Comunicações de assédio são sigilosas e tratadas pela Cipa conforme a Lei nº 14.457/2022. Você não precisa se identificar, e o caso não aparece no painel público.</x-import>
+                    </sc-if>
+                  </fieldset>
+                </sc-if>
+
+                <sc-if value="{{ w1 }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:var(--sp-adjust-3)">
+                    <h2 style="margin:0;font-size:var(--fs-up-2);font-weight:600">Onde aconteceu?</h2>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:var(--sp-layout-2)">
+                      <div style="display:flex;flex-direction:column;gap:6px">
+                        <x-import component-from-global-scope="GOVBRDesignSystem_783538.Select" label="Pavimento" value="{{ fAndar }}" onChange="{{ onAndar }}" aria-invalid="{{ temErroAndar }}" hint-size="100%,66px">
+                          <option value="">Selecione</option><option value="sub">Subsolo</option><option value="p1">1º Pavimento</option><option value="p2">2º Pavimento</option><option value="p3">3º Pavimento</option><option value="p4">4º Pavimento</option>
+                        </x-import>
+                        <sc-if value="{{ temErroAndar }}" hint-placeholder-val="{{ false }}">
+                          <span role="alert" style="display:flex;align-items:center;gap:6px;font-size:var(--fs-down-1);color:var(--state-error)"><i class="fa-solid fa-circle-exclamation"></i>{{ erroAndar }}</span>
+                        </sc-if>
+                      </div>
+                      <x-import component-from-global-scope="GOVBRDesignSystem_783538.Select" label="Setor ou local" hint="Opcional" value="{{ fSala }}" onChange="{{ onSala }}" disabled="{{ semAndar }}" hint-size="100%,90px">
+                        {{ optSalasEl }}
+                      </x-import>
+                    </div>
+                    <sc-if value="{{ wizPlanta.show }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;flex-direction:column;gap:var(--sp-layout-1)">
+                        <span style="font-size:var(--fs-down-1);font-weight:600;color:var(--fg-secondary)">Ou toque no local na planta do {{ wizPlanta.nome }}</span>
+                        <div style="position:relative;width:100%;max-width:460px;aspect-ratio:1;background:#fff;border:2px solid #333;box-sizing:border-box">
+                          <div style="position:absolute;left:{{ wizPlanta.nx }}%;top:{{ wizPlanta.ny }}%;width:{{ wizPlanta.nw }}%;height:{{ wizPlanta.nh }}%;background:var(--br-gray-5);border:1px solid var(--br-gray-30);box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-size:10px;color:#555">Núcleo e circulação</div>
+                          <sc-for list="{{ wizPlanta.salas }}" as="s" hint-placeholder-count="10">
+                            <button type="button" onClick="{{ s.escolher }}" aria-pressed="{{ s.sel }}" title="{{ s.nome }}" style="position:absolute;left:{{ s.x }}%;top:{{ s.y }}%;width:{{ s.w }}%;height:{{ s.h }}%;box-sizing:border-box;border:1px solid var(--br-gray-50);background:{{ s.fundo }};outline:{{ s.contorno }};outline-offset:-3px;font-family:var(--font-primary);font-size:10px;font-weight:600;color:{{ s.cor }};cursor:pointer;padding:2px;overflow:hidden;word-break:break-word" style-hover="background:var(--br-blue-warm-vivid-5)">{{ s.sigla }}</button>
+                          </sc-for>
+                        </div>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ w2 }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:var(--sp-adjust-3)">
+                    <h2 style="margin:0;font-size:var(--fs-up-2);font-weight:600">Conte o que aconteceu</h2>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:var(--sp-layout-2);align-items:start">
+                      <div style="position:relative">
+                        <x-import component-from-global-scope="GOVBRDesignSystem_783538.Input" label="Quando aconteceu?" readOnly="{{ true }}" value="{{ diaTxt }}" onClick="{{ toggleCal }}" aria-haspopup="dialog" aria-expanded="{{ calAberto }}" hint-size="100%,66px"></x-import>
+                        <sc-if value="{{ calAberto }}" hint-placeholder-val="{{ false }}">
+                          <div class="br-datetimepicker" role="dialog" aria-label="Escolher data" style="position:absolute;left:0;top:100%;margin-top:var(--sp-adjust-1);width:300px;background:var(--bg-main-primary);box-shadow:var(--elevation-3);border-radius:var(--radius-sm);padding:var(--sp-layout-2);z-index:20;box-sizing:border-box;display:flex;flex-direction:column;gap:var(--sp-adjust-2)">
+                            <div style="display:flex;align-items:center;justify-content:space-between">
+                              <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="tertiary" size="small" circle="{{ true }}" icon="chevron-left" aria-label="Mês anterior" onClick="{{ cal.ant }}" hint-size="32px,32px"></x-import>
+                              <span style="font-weight:600">{{ cal.titulo }}</span>
+                              <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="tertiary" size="small" circle="{{ true }}" icon="chevron-right" aria-label="Próximo mês" disabled="{{ cal.semProx }}" onClick="{{ cal.prox }}" hint-size="32px,32px"></x-import>
+                            </div>
+                            <div class="dt-grid">
+                              <sc-for list="{{ cal.semana }}" as="s" hint-placeholder-count="7"><div style="font-weight:600;color:var(--fg-secondary);padding:6px 0">{{ s.l }}</div></sc-for>
+                              <sc-for list="{{ cal.vazios }}" as="x" hint-placeholder-count="3"><div></div></sc-for>
+                              <sc-for list="{{ cal.dias }}" as="d" hint-placeholder-count="30">
+                                <x-import component-from-global-scope="GOVBRDesignSystem_783538.DateTimeItem" day="{{ d.d }}" selected="{{ d.sel }}" disabled="{{ d.dis }}" onClick="{{ d.escolher }}" hint-size="32px,32px"></x-import>
+                              </sc-for>
+                            </div>
+                            <div style="display:flex;justify-content:flex-end"><x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="tertiary" size="small" onClick="{{ cal.hoje }}" hint-size="70px,32px">Hoje</x-import></div>
+                          </div>
+                        </sc-if>
+                      </div>
+                      <x-import component-from-global-scope="GOVBRDesignSystem_783538.Select" label="Grupo de risco" hint="Se não souber, a Cipa faz a classificação." value="{{ fGrupo }}" onChange="{{ onGrupo }}" hint-size="100%,90px">
+                        <option value="">Não sei</option><option value="qui">Químico</option><option value="aci">Acidentes</option><option value="bio">Biológico</option><option value="fis">Físico</option><option value="erg">Ergonômico</option><option value="psi">Psicossocial</option>
+                      </x-import>
+                    </div>
+                    <x-import component-from-global-scope="GOVBRDesignSystem_783538.Textarea" label="Descreva a situação" placeholder="O que você observou, em que ponto exato do local e desde quando" value="{{ fDesc }}" onChange="{{ onDesc }}" rows="5" maxLength="1000" error="{{ erroDesc }}" hint="{{ descHint }}" hint-size="100%,150px"></x-import>
+                    <div style="display:flex;flex-direction:column;gap:var(--sp-layout-1)">
+                      <span style="font-size:var(--fs-down-1);font-weight:600;color:var(--fg-secondary)">Fotos (opcional, até 5)</span>
+                      <x-import component-from-global-scope="GOVBRDesignSystem_783538.Upload" label="Arraste fotos ou clique para selecionar" onFiles="{{ onFotos }}" hint-size="100%,120px"></x-import>
+                      <sc-if value="{{ temFotos }}" hint-placeholder-val="{{ false }}">
+                        <div class="br-list" role="list" style="border:1px solid var(--border-primary);border-radius:var(--radius-sm)">
+                          <sc-for list="{{ fotos }}" as="ft" hint-placeholder-count="1">
+                            <div class="br-item" role="listitem" style="cursor:default">
+                              <i class="fa-solid fa-image" style="color:var(--fg-secondary)"></i>
+                              <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="{{ ft.nome }}">{{ ft.nome }}</span>
+                              <span style="font-size:var(--fs-down-2);color:var(--fg-secondary)">{{ ft.tam }}</span>
+                              <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="tertiary" size="small" circle="{{ true }}" icon="trash-can" aria-label="Remover foto" onClick="{{ ft.remover }}" hint-size="32px,32px"></x-import>
+                            </div>
+                          </sc-for>
+                        </div>
+                      </sc-if>
+                    </div>
+                    <x-import component-from-global-scope="GOVBRDesignSystem_783538.Switch" label="Enviar de forma anônima" checked="{{ fAnon }}" onChange="{{ onAnon }}" hint-size="240px,24px"></x-import>
+                    <sc-if value="{{ mostrarContato }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:var(--sp-layout-2)">
+                        <x-import component-from-global-scope="GOVBRDesignSystem_783538.Input" label="Nome (opcional)" value="{{ fNome }}" onChange="{{ onNome }}" hint-size="100%,66px"></x-import>
+                        <x-import component-from-global-scope="GOVBRDesignSystem_783538.Input" label="E-mail ou ramal" value="{{ fContato }}" onChange="{{ onContato }}" error="{{ erroContato }}" hint-size="100%,66px"></x-import>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ w3 }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:var(--sp-adjust-2)">
+                    <h2 style="margin:0;font-size:var(--fs-up-2);font-weight:600">Confira antes de enviar</h2>
+                    <div style="display:flex;flex-direction:column">
+                      <sc-for list="{{ revisao }}" as="r" hint-placeholder-count="7">
+                        <div style="display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr) auto;gap:var(--sp-layout-2);padding:var(--sp-adjust-2) 0;border-top:1px solid var(--border-primary);align-items:start">
+                          <span style="font-size:var(--fs-down-1);font-weight:600;color:var(--fg-secondary);padding-top:6px">{{ r.label }}</span>
+                          <span style="font-size:var(--fs-base);line-height:1.5;word-break:break-word;padding-top:4px">{{ r.valor }}</span>
+                          <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="tertiary" size="small" onClick="{{ r.alterar }}" hint-size="80px,32px">Alterar</x-import>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-if>
+              </x-import>
+
+              <div style="display:flex;flex-wrap:wrap;gap:var(--sp-adjust-2);align-items:center;border-top:1px solid var(--border-primary);padding-top:var(--sp-adjust-3)">
+                <a href="#/" style="text-decoration:none;margin-right:auto"><x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="tertiary" hint-size="110px,40px">Cancelar</x-import></a>
+                <sc-if value="{{ temVoltar }}" hint-placeholder-val="{{ false }}">
+                  <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="secondary" icon="arrow-left" onClick="{{ voltar }}" hint-size="110px,40px">Voltar</x-import>
+                </sc-if>
+                <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="primary" icon="{{ avancarIcone }}" loading="{{ enviando }}" onClick="{{ avancar }}" hint-size="140px,40px">{{ avancarTxt }}</x-import>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+        <aside style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:var(--sp-layout-2)">
+          <div style="background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);padding:var(--sp-adjust-3);display:flex;flex-direction:column;gap:var(--sp-layout-2)">
+            <h2 style="margin:0;font-size:var(--fs-up-1);font-weight:600">O que acontece depois</h2>
+            <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:var(--sp-layout-2)">
+              <li style="display:flex;gap:var(--sp-adjust-2)"><span class="step-circle" style="flex-shrink:0;background:var(--interactive);color:var(--interactive-fg)">1</span><span style="font-size:var(--fs-down-1);line-height:1.5;padding-top:4px">A Cipa recebe a comunicação e classifica o risco.</span></li>
+              <li style="display:flex;gap:var(--sp-adjust-2)"><span class="step-circle" style="flex-shrink:0;background:var(--interactive);color:var(--interactive-fg)">2</span><span style="font-size:var(--fs-down-1);line-height:1.5;padding-top:4px">Membros da Cipa e do SESMT inspecionam o local.</span></li>
+              <li style="display:flex;gap:var(--sp-adjust-2)"><span class="step-circle" style="flex-shrink:0;background:var(--interactive);color:var(--interactive-fg)">3</span><span style="font-size:var(--fs-down-1);line-height:1.5;padding-top:4px">A medida adotada é registrada e o mapa do pavimento é atualizado.</span></li>
+            </ol>
+            <a href="#/acompanhar" style="font-size:var(--fs-down-1);font-weight:600">Acompanhar uma comunicação</a>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isAcompanhar }}" hint-placeholder-val="{{ false }}">
+    <main style="flex:1;width:100%;max-width:1140px;margin:0 auto;padding:var(--sp-layout-3) var(--sp-layout-3) var(--sp-layout-8);box-sizing:border-box;display:flex;flex-direction:column;gap:var(--sp-layout-3)">
+      <div style="white-space:nowrap;overflow-x:auto"><x-import component-from-global-scope="GOVBRDesignSystem_783538.Breadcrumb" items="{{ migalhasAc }}" hint-size="100%,20px"></x-import></div>
+      <div style="display:flex;flex-direction:column;gap:var(--sp-layout-1);max-width:720px">
+        <h1 style="margin:0;font-size:var(--fs-up-7);font-weight:700">Acompanhar comunicação</h1>
+        <p style="margin:0;font-size:var(--fs-up-1);line-height:1.5;color:var(--fg-secondary)">Informe o número de protocolo recebido no envio para ver a situação e o histórico da sua comunicação.</p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:var(--sp-layout-4);align-items:flex-start">
+        <div style="flex:999 1 560px;min-width:0;display:flex;flex-direction:column;gap:var(--sp-layout-3)">
+          <div style="background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);padding:var(--sp-layout-3);display:flex;flex-wrap:wrap;gap:var(--sp-adjust-2);align-items:flex-end">
+            <div style="flex:1 1 260px;min-width:0">
+              <x-import component-from-global-scope="GOVBRDesignSystem_783538.Input" label="Número do protocolo" placeholder="Ex.: CIPA-2026-0146 ou 0146" value="{{ protoQ }}" onChange="{{ onProto }}" onKeyDown="{{ onProtoTecla }}" hint-size="100%,66px"></x-import>
+            </div>
+            <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="primary" icon="magnifying-glass" onClick="{{ consultar }}" hint-size="130px,40px">Consultar</x-import>
+          </div>
+
+          <sc-if value="{{ temAc }}" hint-placeholder-val="{{ false }}">
+            <div style="background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);display:flex;flex-direction:column">
+              <div style="padding:var(--sp-layout-3);display:flex;flex-wrap:wrap;gap:var(--sp-adjust-2);align-items:flex-start;justify-content:space-between;border-bottom:1px solid var(--border-primary)">
+                <div style="display:flex;flex-direction:column;gap:var(--sp-adjust-1)">
+                  <span style="font-family:var(--font-secondary);font-size:var(--fs-up-3);font-weight:700">{{ ac.protocolo }}</span>
+                  <span style="font-size:var(--fs-base)">{{ ac.tipo }} · {{ ac.local }}</span>
+                  <span style="font-size:var(--fs-down-1);color:var(--fg-secondary)">Registrada em {{ ac.data }} · {{ ac.setorNome }}</span>
+                </div>
+                <span class="br-tag" style="background:{{ ac.tagFundo }};color:{{ ac.tagCor }};font-weight:600">{{ ac.situacao }}</span>
+              </div>
+              <div style="padding:var(--sp-layout-3) var(--sp-layout-2);overflow-x:auto;border-bottom:1px solid var(--border-primary)">
+                <div style="min-width:560px"><x-import component-from-global-scope="GOVBRDesignSystem_783538.Step" items="{{ ac.passos }}" current="{{ ac.atual }}" hint-size="100%,44px"></x-import></div>
+              </div>
+              <div style="padding:var(--sp-layout-3);display:flex;flex-direction:column;gap:var(--sp-layout-2)">
+                <h2 style="margin:0;font-size:var(--fs-up-1);font-weight:600">Histórico</h2>
+                <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column">
+                  <sc-for list="{{ ac.hist }}" as="h" hint-placeholder-count="3">
+                    <li style="display:grid;grid-template-columns:16px 96px minmax(0,1fr);gap:var(--sp-adjust-2);padding-bottom:var(--sp-layout-2);align-items:start">
+                      <span style="width:12px;height:12px;border-radius:50%;background:{{ h.cor }};margin-top:5px"></span>
+                      <span style="font-size:var(--fs-down-1);color:var(--fg-secondary);padding-top:1px">{{ h.data }}</span>
+                      <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:var(--fs-base);font-weight:{{ h.peso }}">{{ h.situacao }}</span><span style="font-size:var(--fs-down-1);line-height:1.45;color:var(--fg-secondary)">{{ h.txt }}</span></span>
+                    </li>
+                  </sc-for>
+                </ol>
+                <div style="display:flex;flex-wrap:wrap;gap:var(--sp-adjust-2)">
+                  <a href="{{ ac.href }}" style="text-decoration:none"><x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="secondary" icon="map-location-dot" hint-size="190px,40px">Ver o local no mapa</x-import></a>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ acNaoEnc }}" hint-placeholder-val="{{ false }}">
+            <div style="background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);padding:var(--sp-layout-5) var(--sp-layout-3);display:flex;flex-direction:column;align-items:center;text-align:center;gap:var(--sp-adjust-2)">
+              <img src="assets/ilustracoes/error10.png" alt="" style="width:180px;height:180px;object-fit:contain">
+              <h2 style="margin:0;font-size:var(--fs-up-3);font-weight:600">Protocolo não encontrado</h2>
+              <p style="margin:0;font-size:var(--fs-base);line-height:1.5;color:var(--fg-secondary);max-width:440px">Não encontramos a comunicação “{{ protoBusca }}”. Confira o número recebido no envio. Ele segue o formato CIPA-2026-0000.</p>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ acVazio }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;gap:var(--sp-layout-3);align-items:center;padding:var(--sp-layout-2) var(--sp-layout-1);flex-wrap:wrap">
+              <img src="assets/ilustracoes/empty-space-10.png" alt="" style="width:140px;height:140px;object-fit:contain">
+              <div style="flex:1 1 260px;display:flex;flex-direction:column;gap:var(--sp-adjust-1)">
+                <span style="font-size:var(--fs-up-1);font-weight:600">Nenhuma comunicação consultada</span>
+                <span style="font-size:var(--fs-base);line-height:1.5;color:var(--fg-secondary)">Digite o número completo ou apenas os quatro últimos dígitos, por exemplo 0146.</span>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+
+        <aside style="flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:var(--sp-layout-2)">
+          <sc-if value="{{ temMinhas }}" hint-placeholder-val="{{ false }}">
+            <div style="background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);overflow:hidden">
+              <div style="padding:var(--sp-layout-2);font-size:var(--fs-up-1);font-weight:600">Minhas comunicações</div>
+              <div class="br-list" role="list" style="border-top:1px solid var(--border-primary)">
+                <sc-for list="{{ minhasLista }}" as="c" hint-placeholder-count="2">
+                  <a href="{{ c.link }}" class="br-item" role="listitem" style="text-decoration:none;color:var(--fg-primary);flex-wrap:wrap">
+                    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+                      <span style="font-family:var(--font-secondary);font-size:var(--fs-down-1);font-weight:600">{{ c.protocolo }}</span>
+                      <span style="font-size:var(--fs-down-1);color:var(--fg-secondary)">{{ c.local }}</span>
+                    </div>
+                    <span class="br-tag" style="background:{{ c.tagFundo }};color:{{ c.tagCor }};font-size:var(--fs-down-2);white-space:nowrap">{{ c.situacao }}</span>
+                  </a>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ sugerirLogin }}" hint-placeholder-val="{{ true }}">
+            <div style="background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);padding:var(--sp-adjust-3);display:flex;flex-direction:column;gap:var(--sp-adjust-2);align-items:flex-start">
+              <span style="font-size:var(--fs-up-1);font-weight:600">Não tem o protocolo?</span>
+              <span style="font-size:var(--fs-down-1);line-height:1.5;color:var(--fg-secondary)">Entre com a conta gov.br para ver todas as comunicações que você fez de forma identificada.</span>
+              <x-import component-from-global-scope="GOVBRDesignSystem_783538.SignIn" onClick="{{ entrar }}" hint-size="190px,40px">Entrar com gov.br</x-import>
+            </div>
+          </sc-if>
+        </aside>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isPainel }}" hint-placeholder-val="{{ false }}">
+    <main style="flex:1;width:100%;max-width:1240px;margin:0 auto;padding:var(--sp-layout-3) var(--sp-layout-3) var(--sp-layout-8);box-sizing:border-box;display:flex;flex-direction:column;gap:var(--sp-layout-3)">
+      <div style="white-space:nowrap;overflow-x:auto"><x-import component-from-global-scope="GOVBRDesignSystem_783538.Breadcrumb" items="{{ migalhasPainel }}" hint-size="100%,20px"></x-import></div>
+      <div style="display:flex;flex-direction:column;gap:var(--sp-layout-1)">
+        <h1 style="margin:0;font-size:var(--fs-up-7);font-weight:700">Painel da Cipa</h1>
+        <p style="margin:0;font-size:var(--fs-up-1);color:var(--fg-secondary)">Visão consolidada dos riscos mapeados no edifício-sede e das comunicações recebidas.</p>
+      </div>
+      <div class="br-tab" role="tablist" aria-label="Seções do painel" style="overflow-x:auto;overflow-y:hidden;white-space:nowrap">
+        <sc-for list="{{ abasPainel }}" as="t" hint-placeholder-count="2">
+          <x-import component-from-global-scope="GOVBRDesignSystem_783538.TabItem" label="{{ t.nome }}" active="{{ t.ativo }}" onClick="{{ t.abrir }}" hint-size="160px,50px"></x-import>
+        </sc-for>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:var(--sp-layout-2)">
+        <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+          <div style="background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);padding:var(--sp-adjust-3);display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:var(--fs-down-1);color:var(--fg-secondary)">{{ k.label }}</span>
+            <span style="font-size:var(--fs-up-8);font-weight:700;line-height:1.1;color:{{ k.cor }}">{{ k.valor }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ abaGeral }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:var(--sp-layout-3)">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:var(--sp-layout-3);align-items:start">
+            <div style="background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);padding:var(--sp-adjust-3);display:flex;flex-direction:column;gap:var(--sp-layout-2);min-width:0">
+              <div style="display:flex;flex-direction:column;gap:var(--sp-adjust-1)">
+                <h2 style="margin:0;font-size:var(--fs-up-2);font-weight:600">Setores por grupo de risco</h2>
+                <span style="font-size:var(--fs-down-1);color:var(--fg-secondary)">Quantidade de locais com o risco em cada pavimento. A intensidade da cor indica o maior grau encontrado.</span>
+              </div>
+              <div style="overflow-x:auto">
+                <div role="table" aria-label="Locais por pavimento e grupo de risco" style="display:grid;grid-template-columns:110px repeat(5,minmax(56px,1fr));gap:4px;min-width:420px">
+                  <div></div>
+                  <sc-for list="{{ heatCab }}" as="h" hint-placeholder-count="5">
+                    <div role="columnheader" style="font-size:var(--fs-down-2);font-weight:600;color:var(--fg-secondary);text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;padding-bottom:4px"><span style="width:10px;height:10px;border-radius:50%;background:{{ h.cor }}"></span>{{ h.nome }}</div>
+                  </sc-for>
+                  <sc-for list="{{ heat }}" as="row" hint-placeholder-count="5">
+                    <a href="{{ row.href }}" role="rowheader" style="font-size:var(--fs-down-1);font-weight:600;display:flex;align-items:center;text-decoration:none">{{ row.nome }}</a>
+                    <sc-for list="{{ row.cells }}" as="c" hint-placeholder-count="5">
+                      <div role="cell" title="{{ c.titulo }}" aria-label="{{ c.titulo }}" style="height:44px;border-radius:var(--radius-sm);background:{{ c.fundo }};color:{{ c.cor }};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:var(--fs-base)">{{ c.txt }}</div>
+                    </sc-for>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+            <div style="background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);padding:var(--sp-adjust-3);display:flex;flex-direction:column;gap:14px;min-width:0">
+              <div style="display:flex;flex-direction:column;gap:var(--sp-adjust-1)">
+                <h2 style="margin:0;font-size:var(--fs-up-2);font-weight:600">Agentes mais frequentes</h2>
+                <span style="font-size:var(--fs-down-1);color:var(--fg-secondary)">Número de locais em que o agente foi identificado.</span>
+              </div>
+              <sc-for list="{{ topAgentes }}" as="a" hint-placeholder-count="8">
+                <div style="display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr) 28px;gap:var(--sp-adjust-2);align-items:center">
+                  <span style="font-size:var(--fs-down-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="{{ a.nome }}">{{ a.nome }}</span>
+                  <div style="height:12px;background:var(--bg-main-secondary);border-radius:100em;overflow:hidden"><div style="height:100%;width:{{ a.pct }}%;background:{{ a.cor }};border-radius:100em;transition:width var(--dur-slow-1) var(--ease-out)"></div></div>
+                  <span style="font-size:var(--fs-down-1);font-weight:600;text-align:right">{{ a.n }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);display:flex;flex-direction:column;min-width:0">
+            <div style="padding:var(--sp-adjust-3) var(--sp-adjust-3) var(--sp-adjust-2)"><h2 style="margin:0;font-size:var(--fs-up-2);font-weight:600">Locais com risco de grau grande</h2></div>
+            <div class="br-list" role="list">
+              <sc-for list="{{ altos }}" as="s" hint-placeholder-count="4">
+                <a href="{{ s.href }}" class="br-item" role="listitem" style="text-decoration:none;color:var(--fg-primary);padding:12px 20px">
+                  <span style="width:12px;height:12px;border-radius:50%;background:var(--br-red-vivid-50);flex-shrink:0"></span>
+                  <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:var(--fs-base);font-weight:600">{{ s.nome }}</span><span style="font-size:var(--fs-down-1);color:var(--fg-secondary)">{{ s.sigla }} · {{ s.andarNome }} · {{ s.agentes }}</span></div>
+                  <i class="fa-solid fa-chevron-right" style="font-size:12px;color:var(--interactive)"></i>
+                </a>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ abaCom }}" hint-placeholder-val="{{ false }}">
+        <div style="background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);display:flex;flex-direction:column;min-width:0">
+          <div style="padding:var(--sp-adjust-3);display:flex;flex-wrap:wrap;gap:var(--sp-adjust-2);align-items:center;justify-content:space-between">
+            <div style="display:flex;align-items:center;gap:var(--sp-adjust-2);flex-wrap:wrap;flex:1 1 auto">
+              <h2 style="margin:0;font-size:var(--fs-up-2);font-weight:600;white-space:nowrap">Comunicações recebidas</h2>
+              <x-import component-from-global-scope="GOVBRDesignSystem_783538.Tag" hint-size="120px,28px">Dados de exemplo</x-import>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:var(--sp-layout-1);align-items:center">
+              <span style="font-size:var(--fs-down-1);color:var(--fg-secondary)">Densidade</span>
+              <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="{{ densConf }}" size="small" onClick="{{ setConf }}" hint-size="110px,32px">Confortável</x-import>
+              <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="{{ densComp }}" size="small" onClick="{{ setComp }}" hint-size="100px,32px">Compacta</x-import>
+              <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="secondary" size="small" icon="file-arrow-down" onClick="{{ exportar }}" hint-size="140px,32px">Exportar CSV</x-import>
+            </div>
+          </div>
+          <div style="padding:0 var(--sp-adjust-3) var(--sp-layout-2);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:var(--sp-layout-2);align-items:end">
+            <x-import component-from-global-scope="GOVBRDesignSystem_783538.Input" label="Buscar" placeholder="Protocolo, setor ou tipo" value="{{ fTxt }}" onChange="{{ onFTxt }}" hint-size="100%,66px"></x-import>
+            <x-import component-from-global-scope="GOVBRDesignSystem_783538.Select" label="Situação" value="{{ fSit }}" onChange="{{ onFSit }}" hint-size="100%,66px">
+              <option value="">Todas</option><option value="Recebida">Recebida</option><option value="Em análise">Em análise</option><option value="Inspeção agendada">Inspeção agendada</option><option value="Concluída">Concluída</option>
+            </x-import>
+            <x-import component-from-global-scope="GOVBRDesignSystem_783538.Select" label="Pavimento" value="{{ fAnd }}" onChange="{{ onFAnd }}" hint-size="100%,66px">
+              <option value="">Todos</option><option value="sub">Subsolo</option><option value="p1">1º Pavimento</option><option value="p2">2º Pavimento</option><option value="p3">3º Pavimento</option><option value="p4">4º Pavimento</option>
+            </x-import>
+          </div>
+          <div style="overflow-x:auto">
+            <div role="table" aria-label="Comunicações recebidas" style="min-width:760px;font-size:var(--fs-down-1)">
+              <div role="row" style="display:grid;grid-template-columns:110px 160px minmax(180px,1.4fr) minmax(130px,1fr) 160px;background:var(--bg-main-secondary)">
+                <sc-for list="{{ colsCom }}" as="c" hint-placeholder-count="5">
+                  <button type="button" role="columnheader" aria-sort="{{ c.aria }}" onClick="{{ c.ordenar }}" style="display:flex;align-items:center;gap:6px;padding:12px 16px;border:0;background:transparent;font-family:var(--font-primary);font-size:var(--fs-down-1);font-weight:600;color:{{ c.cor }};cursor:pointer;text-align:left;white-space:nowrap">{{ c.label }}<i class="{{ c.icone }}" style="font-size:11px"></i></button>
+                </sc-for>
+              </div>
+              <sc-for list="{{ linhasCom }}" as="l" hint-placeholder-count="6">
+                <a href="{{ l.link }}" role="row" style="display:grid;grid-template-columns:110px 160px minmax(180px,1.4fr) minmax(130px,1fr) 160px;border-top:1px solid var(--border-primary);text-decoration:none;color:var(--fg-primary);align-items:center" style-hover="background:var(--bg-main-secondary)">
+                  <span role="cell" style="padding:{{ padCom }};white-space:nowrap">{{ l.data }}</span>
+                  <span role="cell" style="padding:{{ padCom }};font-family:var(--font-secondary);font-weight:600;color:var(--interactive);white-space:nowrap">{{ l.protocolo }}</span>
+                  <span role="cell" style="padding:{{ padCom }};display:flex;align-items:center;gap:8px;min-width:0"><span style="width:10px;height:10px;border-radius:50%;background:{{ l.cor }};flex-shrink:0"></span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="{{ l.setorNome }}">{{ l.local }}</span></span>
+                  <span role="cell" style="padding:{{ padCom }}">{{ l.tipo }}</span>
+                  <span role="cell" style="padding:{{ padCom }}"><span class="br-tag" style="background:{{ l.tagFundo }};color:{{ l.tagCor }};font-size:var(--fs-down-2);font-weight:600;white-space:nowrap">{{ l.situacao }}</span></span>
+                </a>
+              </sc-for>
+            </div>
+          </div>
+          <sc-if value="{{ comVazio }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:var(--sp-adjust-2);padding:var(--sp-layout-5) var(--sp-layout-3);border-top:1px solid var(--border-primary)">
+              <img src="assets/ilustracoes/empty-space-20.png" alt="" style="width:140px;height:140px;object-fit:contain">
+              <span style="font-size:var(--fs-up-1);font-weight:600">Nenhuma comunicação encontrada</span>
+              <span style="font-size:var(--fs-base);color:var(--fg-secondary)">Altere a busca ou os filtros de situação e pavimento.</span>
+              <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="secondary" size="small" icon="xmark" onClick="{{ limparCom }}" hint-size="140px,32px">Limpar filtros</x-import>
+            </div>
+          </sc-if>
+          <div style="display:flex;flex-wrap:wrap;gap:var(--sp-adjust-2);align-items:center;justify-content:space-between;padding:var(--sp-adjust-2) var(--sp-adjust-3);border-top:1px solid var(--border-primary)">
+            <span style="font-size:var(--fs-down-1);color:var(--fg-secondary)">{{ contagemCom }}</span>
+            <sc-if value="{{ multiPag }}" hint-placeholder-val="{{ false }}">
+              <x-import component-from-global-scope="GOVBRDesignSystem_783538.Pagination" page="{{ pag }}" total="{{ totalPag }}" onChange="{{ onPag }}" hint-size="200px,32px"></x-import>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isNormas }}" hint-placeholder-val="{{ false }}">
+    <main style="flex:1;width:100%;max-width:1100px;margin:0 auto;padding:var(--sp-layout-3) var(--sp-layout-3) var(--sp-layout-8);box-sizing:border-box;display:flex;flex-direction:column;gap:var(--sp-layout-4)">
+      <div style="white-space:nowrap;overflow-x:auto"><x-import component-from-global-scope="GOVBRDesignSystem_783538.Breadcrumb" items="{{ migalhasNormas }}" hint-size="100%,20px"></x-import></div>
+      <div style="display:flex;flex-direction:column;gap:var(--sp-layout-1);max-width:760px">
+        <h1 style="margin:0;font-size:var(--fs-up-7);font-weight:700">Normas e metodologia</h1>
+        <p style="margin:0;font-size:var(--fs-up-1);line-height:1.5;color:var(--fg-secondary);text-wrap:pretty">O mapa de risco é elaborado pela Cipa com a participação dos empregados de cada setor. Ele indica os riscos presentes nos locais de trabalho e orienta as medidas de prevenção.</p>
+      </div>
+      <section style="background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);padding:var(--sp-layout-3);display:flex;flex-direction:column;gap:var(--sp-layout-2)">
+        <h2 style="margin:0;font-size:var(--fs-up-3);font-weight:600">Como o mapa foi elaborado</h2>
+        <ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:10px;font-size:var(--fs-base);line-height:1.5">
+          <li>Inspeção de cada pavimento pela Cipa, com entrevistas aos empregados dos setores.</li>
+          <li>Tabulação dos agentes de risco por setor e classificação em grau pequeno, médio ou grande.</li>
+          <li>Representação na planta com círculos coloridos por grupo de risco, proporcionais ao grau.</li>
+          <li>Indicação de medidas preventivas e EPIs por agente, com referência à norma aplicável.</li>
+          <li>Revisão periódica a cada mandato da Cipa e sempre que houver mudança de layout ou comunicação de risco.</li>
+        </ol>
+        <x-import component-from-global-scope="GOVBRDesignSystem_783538.Message" type="info" hint-size="100%,64px">O grupo Psicossocial foi incluído nesta versão para atender ao gerenciamento de fatores de risco psicossociais previsto na NR-1. A avaliação está em andamento e será publicada no mapa ao final do levantamento.</x-import>
+      </section>
+      <section style="display:flex;flex-direction:column;gap:var(--sp-layout-2)">
+        <div style="display:flex;flex-wrap:wrap;gap:var(--sp-adjust-2);align-items:baseline;justify-content:space-between">
+          <h2 style="margin:0;font-size:var(--fs-up-3);font-weight:600">Normas Regulamentadoras aplicadas</h2>
+          <a href="https://www.gov.br/trabalho-e-emprego/pt-br" style="font-size:var(--fs-down-1);font-weight:600;display:inline-flex;align-items:center;gap:6px">Texto completo no portal do MTE<i class="fa-solid fa-arrow-up-right-from-square" style="font-size:12px"></i></a>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:var(--sp-layout-2)">
+          <sc-for list="{{ normas }}" as="n" hint-placeholder-count="8">
+            <div style="background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);padding:var(--sp-adjust-3);display:flex;flex-direction:column;gap:var(--sp-layout-1)">
+              <span style="font-size:var(--fs-up-2);font-weight:700;color:var(--interactive)">{{ n.nr }}</span>
+              <span style="font-size:var(--fs-base);font-weight:600;line-height:1.35">{{ n.titulo }}</span>
+              <span style="font-size:var(--fs-down-1);line-height:1.5;color:var(--fg-secondary)">{{ n.uso }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isAjuda }}" hint-placeholder-val="{{ false }}">
+    <main style="flex:1;width:100%;max-width:1140px;margin:0 auto;padding:var(--sp-layout-3) var(--sp-layout-3) var(--sp-layout-8);box-sizing:border-box;display:flex;flex-direction:column;gap:var(--sp-layout-3)">
+      <div style="white-space:nowrap;overflow-x:auto"><x-import component-from-global-scope="GOVBRDesignSystem_783538.Breadcrumb" items="{{ migalhasAjuda }}" hint-size="100%,20px"></x-import></div>
+      <div style="display:flex;flex-direction:column;gap:var(--sp-layout-1);max-width:720px">
+        <h1 style="margin:0;font-size:var(--fs-up-7);font-weight:700">Ajuda</h1>
+        <p style="margin:0;font-size:var(--fs-up-1);line-height:1.5;color:var(--fg-secondary)">Respostas para as dúvidas mais comuns sobre o mapa de risco e a comunicação com a Cipa.</p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:var(--sp-layout-4);align-items:flex-start">
+        <section style="flex:999 1 560px;min-width:0;background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);padding:var(--sp-layout-1) 0">
+          <h2 style="margin:0;padding:var(--sp-layout-2) var(--sp-layout-2) var(--sp-adjust-2);font-size:var(--fs-up-2);font-weight:600">Perguntas frequentes</h2>
+          <x-import component-from-global-scope="GOVBRDesignSystem_783538.Accordion" sections="{{ ajuda }}" hint-size="100%,520px"></x-import>
+        </section>
+        <aside style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:var(--sp-layout-2)">
+          <div style="background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);padding:var(--sp-adjust-3);display:flex;flex-direction:column;gap:var(--sp-adjust-2);align-items:flex-start">
+            <img src="assets/ilustracoes/yuri01.png" alt="" style="width:120px;height:120px;object-fit:contain;align-self:center">
+            <span style="font-size:var(--fs-up-1);font-weight:600">Primeira vez por aqui?</span>
+            <span style="font-size:var(--fs-down-1);line-height:1.5;color:var(--fg-secondary)">Veja em três passos como navegar pelos pavimentos e ler o mapa.</span>
+            <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="secondary" icon="circle-play" onClick="{{ verTutorial }}" hint-size="160px,40px">Ver o tutorial</x-import>
+          </div>
+          <div style="background:var(--bg-main-primary);box-shadow:var(--elevation-1);border-radius:var(--radius-sm);padding:var(--sp-adjust-3);display:flex;flex-direction:column;gap:var(--sp-adjust-2);align-items:flex-start">
+            <span style="font-size:var(--fs-up-1);font-weight:600">Não encontrou a resposta?</span>
+            <span style="font-size:var(--fs-down-1);line-height:1.5;color:var(--fg-secondary)">Envie sua dúvida ou situação diretamente à Cipa.</span>
+            <a href="#/comunicar" style="text-decoration:none"><x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="primary" icon="paper-plane" hint-size="170px,40px">Falar com a Cipa</x-import></a>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isNaoEncontrado }}" hint-placeholder-val="{{ false }}">
+    <main style="flex:1;width:100%;max-width:720px;margin:0 auto;padding:var(--sp-layout-8) var(--sp-layout-3);box-sizing:border-box;display:flex;flex-direction:column;align-items:center;text-align:center;gap:var(--sp-layout-2)">
+      <img src="assets/ilustracoes/error01.png" alt="" style="width:240px;height:240px;object-fit:contain">
+      <h1 style="margin:0;font-size:var(--fs-up-6);font-weight:700">Página não encontrada</h1>
+      <p style="margin:0;font-size:var(--fs-up-1);line-height:1.5;color:var(--fg-secondary)">O endereço pode ter mudado ou estar incorreto. Use a busca no topo ou volte para o início.</p>
+      <a href="#/" style="text-decoration:none"><x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="primary" icon="house" hint-size="170px,40px">Ir para o início</x-import></a>
+    </main>
+  </sc-if>
+  </div>
+
+  <footer data-noprint="1" style="background:#071D41;color:#fff">
+    <div style="max-width:1280px;margin:0 auto;padding:var(--sp-layout-6) var(--sp-layout-3) var(--sp-layout-4);box-sizing:border-box;display:flex;flex-direction:column;gap:var(--sp-layout-5)">
+      <img src="assets/govbr-negativa.svg" alt="gov.br" style="height:52px;width:auto;align-self:flex-start">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:var(--sp-layout-5) var(--sp-layout-4)">
+        <sc-for list="{{ rodape }}" as="col" hint-placeholder-count="4">
+          <div style="display:flex;flex-direction:column;gap:var(--sp-layout-5)">
+            <sc-for list="{{ col.blocos }}" as="bl" hint-placeholder-count="1">
+              <div style="display:flex;flex-direction:column;gap:18px">
+                <div style="font-size:var(--fs-base);font-weight:700;text-transform:uppercase;letter-spacing:.01em">{{ bl.title }}</div>
+                <sc-for list="{{ bl.items }}" as="it" hint-placeholder-count="4">
+                  <a href="{{ it.href }}" style="font-size:var(--fs-base);line-height:1.4;color:#fff;text-decoration:none" style-hover="text-decoration:underline">{{ it.label }}</a>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:var(--sp-layout-3);align-items:flex-end;justify-content:space-between">
+        <div style="display:flex;flex-direction:column;gap:var(--sp-adjust-2)">
+          <button type="button" onClick="{{ abrirCookies }}" style="display:inline-flex;align-items:center;gap:10px;background:none;border:0;color:#fff;font-family:var(--font-primary);font-size:var(--fs-up-1);cursor:pointer;padding:0;align-self:flex-start"><i class="fa-solid fa-cookie-bite"></i>Redefinir cookies</button>
+          <div style="font-size:var(--fs-up-1);font-weight:700;text-transform:uppercase">Redes sociais</div>
+          <div style="display:flex;gap:var(--sp-layout-1)">
+            <a href="https://www.instagram.com/codevasf" aria-label="Instagram" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;border-radius:50%" style-hover="background:rgba(255,255,255,.12)"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.facebook.com/codevasf" aria-label="Facebook" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;border-radius:50%" style-hover="background:rgba(255,255,255,.12)"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="https://x.com/codevasf" aria-label="X" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;border-radius:50%" style-hover="background:rgba(255,255,255,.12)"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="https://www.linkedin.com/company/codevasf" aria-label="LinkedIn" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;border-radius:50%" style-hover="background:rgba(255,255,255,.12)"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="https://www.youtube.com/codevasf" aria-label="YouTube" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;border-radius:50%" style-hover="background:rgba(255,255,255,.12)"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+        <a href="https://www.gov.br/acessoainformacao" style="display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none"><i class="fa-solid fa-circle-info" style="font-size:48px"></i><span style="font-size:var(--fs-down-1);font-weight:700;line-height:1.15">Acesso à<br>Informação</span></a>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.4);padding:var(--sp-layout-2) var(--sp-layout-3);text-align:center;font-size:var(--fs-down-1)">Todo o conteúdo deste site está publicado sob a licença <a href="https://creativecommons.org/licenses/by-nd/3.0/deed.pt_BR" style="color:#fff">Creative Commons Atribuição-SemDerivações 3.0 Não Adaptada</a></div>
+  </footer>
+
+  <sc-if value="{{ mostrarTopo }}" hint-placeholder-val="{{ false }}">
+    <button type="button" data-noprint="1" aria-label="Voltar ao topo" onClick="{{ irTopo }}" style="position:fixed;right:var(--sp-layout-3);bottom:{{ topoBottom }};width:52px;height:52px;border-radius:50%;border:0;background:var(--interactive);color:var(--interactive-fg);font-size:20px;cursor:pointer;box-shadow:var(--elevation-3);z-index:59;transition:bottom var(--dur-moderate-2) var(--ease)"><i class="fa-solid fa-chevron-up"></i></button>
+  </sc-if>
+
+  <div data-noprint="1" aria-live="polite" style="position:fixed;top:var(--sp-layout-2);right:var(--sp-layout-2);z-index:90;display:flex;flex-direction:column;gap:var(--sp-layout-1);width:360px;max-width:calc(100vw - 32px);pointer-events:none">
+    <sc-for list="{{ toasts }}" as="t" hint-placeholder-count="0">
+      <div style="pointer-events:auto"><x-import component-from-global-scope="GOVBRDesignSystem_783538.Notification" title="{{ t.titulo }}" type="{{ t.tipo }}" onClose="{{ t.fechar }}" hint-size="100%,72px">{{ t.txt }}</x-import></div>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{ mostrarCookie }}" hint-placeholder-val="{{ false }}">
+    <div data-noprint="1"><x-import component-from-global-scope="GOVBRDesignSystem_783538.Cookiebar" onAccept="{{ aceitarCookies }}" hint-size="100%,72px"></x-import></div>
+  </sc-if>
+
+  <sc-if value="{{ onbAberto }}" hint-placeholder-val="{{ false }}">
+    <x-import component-from-global-scope="GOVBRDesignSystem_783538.Modal" title="{{ onb.titulo }}" onClose="{{ onb.fechar }}" hint-size="480px,540px">
+      <div style="display:flex;flex-direction:column;gap:var(--sp-layout-2)">
+        <x-import component-from-global-scope="GOVBRDesignSystem_783538.Step" items="{{ onb.passos }}" current="{{ onb.i }}" hint-size="100%,44px"></x-import>
+        <sc-if value="{{ onb.p0 }}" hint-placeholder-val="{{ false }}"><img src="assets/ilustracoes/julia01.png" alt="" style="height:170px;width:100%;object-fit:contain"></sc-if>
+        <sc-if value="{{ onb.p1 }}" hint-placeholder-val="{{ false }}"><img src="assets/ilustracoes/jose01.png" alt="" style="height:170px;width:100%;object-fit:contain"></sc-if>
+        <sc-if value="{{ onb.p2 }}" hint-placeholder-val="{{ false }}"><img src="assets/ilustracoes/empty-space-00.png" alt="" style="height:170px;width:100%;object-fit:contain"></sc-if>
+        <p style="margin:0;font-size:var(--fs-base);line-height:1.55;color:var(--fg-primary);text-wrap:pretty">{{ onb.txt }}</p>
+        <sc-if value="{{ onb.legenda }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-wrap:wrap;gap:var(--sp-layout-1) var(--sp-adjust-2);align-items:center;padding:var(--sp-adjust-2);background:var(--bg-main-secondary);border-radius:var(--radius-sm)">
+            <sc-for list="{{ legenda }}" as="g" hint-placeholder-count="6">
+              <span style="display:flex;align-items:center;gap:6px;font-size:var(--fs-down-1)"><span style="width:12px;height:12px;border-radius:50%;background:{{ g.fundo }};border:2px {{ g.estiloBorda }} {{ g.borda }};box-sizing:border-box"></span>{{ g.nome }}</span>
+            </sc-for>
+            <span style="display:flex;align-items:center;gap:6px;font-size:var(--fs-down-1);color:var(--fg-secondary)"><span style="width:10px;height:10px;border-radius:50%;border:1.5px solid var(--fg-primary)"></span>pequeno<span style="width:16px;height:16px;border-radius:50%;border:1.5px solid var(--fg-primary)"></span>médio<span style="width:22px;height:22px;border-radius:50%;border:1.5px solid var(--fg-primary)"></span>grande</span>
+          </div>
+        </sc-if>
+        <div style="display:flex;flex-wrap:wrap;gap:var(--sp-adjust-2);align-items:center;padding:var(--sp-layout-1) 0 var(--sp-layout-1)">
+          <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="tertiary" onClick="{{ onb.fechar }}" hint-size="90px,40px">Pular</x-import>
+          <div style="flex:1"></div>
+          <sc-if value="{{ onb.temVoltar }}" hint-placeholder-val="{{ false }}">
+            <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="secondary" onClick="{{ onb.voltar }}" hint-size="100px,40px">Voltar</x-import>
+          </sc-if>
+          <x-import component-from-global-scope="GOVBRDesignSystem_783538.Button" variant="primary" onClick="{{ onb.prox }}" hint-size="120px,40px">{{ onb.proxTxt }}</x-import>
+        </div>
+      </div>
+    </x-import>
+  </sc-if>
+
+  <div vw="true" class="enabled" data-noprint="1"><div vw-access-button="true" class="active"></div><div vw-plugin-wrapper="true"><div class="vw-plugin-top-wrapper"></div></div></div>
+</div></x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;visao3d&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;label&quot;: &quot;Abrir pavimentos em 3D&quot;}, &quot;explosao&quot;: {&quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 62, &quot;min&quot;: 40, &quot;max&quot;: 100, &quot;step&quot;: 2, &quot;unit&quot;: &quot;px&quot;, &quot;tsType&quot;: &quot;number&quot;, &quot;label&quot;: &quot;Espaçamento entre andares (início)&quot;}, &quot;mostrarPsicossocial&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;label&quot;: &quot;Mostrar grupo psicossocial&quot;}, &quot;tutorial&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;label&quot;: &quot;Tutorial na primeira visita&quot;}}">
+class Component extends DCLogic {
+  qrRef = React.createRef();
+  fichaRef = React.createRef();
+  state = this.estadoInicial();
+
+  ls(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  hojeISO() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  isoBR(iso) { const [y, m, d] = iso.split('-'); return d + '/' + m + '/' + y; }
+  formVazio() { return { tipo: 'risco', andar: '', sala: '', grupo: '', desc: '', anon: true, nome: '', contato: '', dia: this.hojeISO() }; }
+  estadoInicial() {
+    const h0 = (location.hash || '').indexOf('#/') === 0 ? location.hash : '#/';
+    return {
+      hash: h0, D: null, q: '', off: {}, soAlto: false, modo3d: null, rot: -35, hov: null, hovSala: null, qr: false, abertos: {},
+      menu: false, dd: null, contraste: this.ls('mr-contraste') === '1', topo: false, vw: window.innerWidth,
+      logado: false, cookies: this.ls('mr-cookies') === '1', onb: this.ls('mr-onb') === '1' ? null : 0, onbManual: false, toasts: [],
+      w: 0, f: this.formVazio(), erros: {}, enviando: false, enviado: null, cal: false, calMes: 0, fotos: [],
+      protoQ: '', protoBusca: null, minhas: [], seq: 148,
+      aba: 'geral', fSit: '', fAnd: '', fTxt: '', ord: { col: 'data', dir: 'desc' }, pag: 1, compacto: false
+    };
+  }
+  rota(h) { const p = (h || '#/').replace(/^#\/?/, '').split('/').filter(Boolean); return [p[0] || 'inicio', p[1], p[2]]; }
+
+  componentDidMount() {
+    this.aplicarRota(this.state.hash, true);
+    this._h = () => { const h = location.hash || '#/'; if (h.indexOf('#/') !== 0 && h !== '#') return; this.aplicarRota(h === '#' ? '#/' : h, false); };
+    window.addEventListener('hashchange', this._h);
+    import(new URL('dados.js', document.baseURI).href).then(m => this.setState({ D: this.prep(m) }));
+    this._mv = e => { if (this._drag) this.setState({ rot: this._drag.r + (e.clientX - this._drag.x) * 0.4 }); };
+    this._up = () => { this._drag = null; };
+    this._sc = () => { const v = window.scrollY > 500; if (v !== this.state.topo) this.setState({ topo: v }); };
+    this._rs = () => this.setState({ vw: window.innerWidth });
+    this._kd = e => {
+      if (e.key !== 'Escape') return;
+      if (this.state.onb != null) this.fecharOnb();
+      this.setState({ menu: false, dd: null, qr: false, cal: false });
+    };
+    window.addEventListener('pointermove', this._mv);
+    window.addEventListener('pointerup', this._up);
+    window.addEventListener('scroll', this._sc, { passive: true });
+    window.addEventListener('resize', this._rs);
+    window.addEventListener('keydown', this._kd);
+    document.documentElement.dataset.contraste = this.state.contraste ? '1' : '0';
+    let tries = 0;
+    const vl = () => {
+      if (window.VLibras && window.VLibras.Widget) {
+        try { new window.VLibras.Widget('https://vlibras.gov.br/app'); if (document.readyState === 'complete' && typeof window.onload === 'function') window.onload(); } catch (e) {}
+      } else if (tries++ < 30) setTimeout(vl, 300);
+    };
+    vl();
+  }
+  componentWillUnmount() {
+    window.removeEventListener('hashchange', this._h);
+    window.removeEventListener('pointermove', this._mv);
+    window.removeEventListener('pointerup', this._up);
+    window.removeEventListener('scroll', this._sc);
+    window.removeEventListener('resize', this._rs);
+    window.removeEventListener('keydown', this._kd);
+  }
+  componentDidUpdate() { this.drawQR(0); }
+
+  aplicarRota(h, inicial) {
+    const prev = this.rota(this.state.hash), p = this.rota(h);
+    const mesma = !inicial && prev[0] === p[0] && (p[0] !== 'andar' || prev[1] === p[1]);
+    const up = { hash: h, qr: false, menu: false, dd: null, q: '', hovSala: null, cal: false };
+    if (inicial || p[2] !== prev[2]) up.abertos = {};
+    if (p[0] === 'comunicar' && !mesma) Object.assign(up, { w: 0, erros: {}, enviado: null, enviando: false, fotos: [], calMes: 0, f: { ...this.formVazio(), andar: p[1] || '', sala: p[2] || '' } });
+    if (p[0] === 'acompanhar') { const pr = p[1] ? decodeURIComponent(p[1]) : null; up.protoBusca = pr; up.protoQ = pr || (mesma ? this.state.protoQ : ''); }
+    if (p[0] === 'painel' && !mesma) up.pag = 1;
+    this.setState(up, () => {
+      if (inicial) return;
+      if (!mesma) { window.scrollTo(0, 0); return; }
+      if (p[0] === 'andar' && p[2] && this.state.vw < 1000 && this.fichaRef.current) {
+        const r = this.fichaRef.current.getBoundingClientRect();
+        window.scrollTo({ top: r.top + window.scrollY - 16, behavior: 'smooth' });
+      }
+    });
+  }
+
+  toast(titulo, txt, tipo) {
+    const id = Date.now() + Math.random();
+    this.setState(s => ({ toasts: [...s.toasts, { id, titulo, txt: txt || '', tipo: tipo || 'success' }].slice(-3) }));
+    setTimeout(() => this.setState(s => ({ toasts: s.toasts.filter(t => t.id !== id) })), 5000);
+  }
+  fecharOnb() { this.lsSet('mr-onb', '1'); this.setState({ onb: null, onbManual: false }); }
+  copiar(txt) { try { navigator.clipboard.writeText(txt); } catch (e) {} }
+
+  qrUrl() { return location.href.split('#')[0] + '#/andar/' + (this._andarId || 'p2'); }
+  drawQR(n) {
+    if (!this.state.qr) return;
+    const el = this.qrRef.current;
+    if (!el || !window.qrcode) { if (n < 20) setTimeout(() => this.drawQR(n + 1), 100); return; }
+    const url = this.qrUrl();
+    if (el.dataset.u === url) return;
+    const q = window.qrcode(0, 'M'); q.addData(url); q.make();
+    el.innerHTML = q.createSvgTag({ cellSize: 6, margin: 2, scalable: true });
+    el.dataset.u = url;
+  }
+
+  prep(m) {
+    const G = {}; m.GRUPOS.forEach(g => { G[g.id] = g; });
+    const parse = r => (r || '').split(/\s+/).filter(Boolean).map(t => { const mm = t.match(/^([A-Z]+)(\d)$/); return { cod: mm[1], grau: +mm[2], ...m.AGENTES[mm[1]] }; });
+    const andares = m.ANDARES.map(a => {
+      const [cx, cy, cw, ch] = a.nucleo;
+      const copa = { id: 'copa', sigla: 'Copa', nome: 'Copa', x: cx + cw * 0.8, y: cy + ch * 0.1, w: cw * 0.1, h: ch * 0.42, r: a.copa, copa: true };
+      const salas = [...a.salas, copa].map(s => {
+        const agentes = parse(s.r); const grupos = {};
+        agentes.forEach(x => { grupos[x.g] = Math.max(grupos[x.g] || 0, x.grau); });
+        return { ...s, andar: a.id, andarNome: a.nome, agentes, grupos, max: Math.max(0, ...Object.values(grupos)) };
+      });
+      return { ...a, salas };
+    });
+    const D = { ...m, G, andares, todas: andares.flatMap(a => a.salas) };
+    D.com = m.COMUNICACOES.map(c => this.enriquecer(c, andares));
+    return D;
+  }
+  enriquecer(c, andares) {
+    const A = andares.find(x => x.id === c.andar); const S = A && A.salas.find(x => x.id === c.sala);
+    return { ...c, andarNome: A ? A.nome : '', setor: S ? S.sigla : 'Área comum', setorNome: S ? S.nome : 'Área comum', local: (A ? A.nome : '') + ' · ' + (S ? S.sigla : 'Área comum'), href: S ? '#/andar/' + A.id + '/' + S.id : (A ? '#/andar/' + A.id : '#/') };
+  }
+
+  renderVals() {
+    const S = this.state; const { D, hash, off, f } = S;
+    const [view, p1, p2] = this.rota(hash);
+    const go = h => () => { location.hash = h; };
+    const set = (o, cb) => this.setState(o, cb);
+    const vw = S.vw;
+    const mostrarPsi = this.props.mostrarPsicossocial ?? true;
+    const VIEWS = ['inicio', 'andar', 'comunicar', 'acompanhar', 'painel', 'normas', 'ajuda'];
+    const norm = t => String(t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    const ONB = [
+      { titulo: 'Bem-vindo ao Mapa de Risco Digital', img: 'assets/ilustracoes/julia01.png', txt: 'Aqui você consulta os riscos de cada pavimento do edifício-sede. Escolha um andar no prédio em 3D ou pelas abas e clique em um setor para ver a ficha de risco.' },
+      { titulo: 'Como ler o mapa', img: 'assets/ilustracoes/jose01.png', txt: 'Cada círculo representa um grupo de risco presente no local. A cor indica o grupo e o tamanho indica o grau: pequeno, médio ou grande.', legenda: true },
+      { titulo: 'Comunique riscos à Cipa', img: 'assets/ilustracoes/empty-space-00.png', txt: 'Viu uma situação de risco? Comunique à Cipa, inclusive de forma anônima, e acompanhe o andamento pelo número de protocolo.' }
+    ];
+    const oi = S.onb;
+    const fecharOnb = () => this.fecharOnb();
+    const andaresMenu = [['Subsolo', 'sub'], ['1º Pavimento', 'p1'], ['2º Pavimento', 'p2'], ['3º Pavimento', 'p3'], ['4º Pavimento', 'p4']];
+    const base = {
+      semContraste: !S.contraste,
+      largo: vw >= 1180, minDisplay: vw >= 760 ? 'block' : 'none', atalhosTxt: vw >= 620 ? 'Atalhos gov.br' : 'Atalhos',
+      navLinks: [['Pavimentos', '#/andar/p2', 'andar'], ['Painel da Cipa', '#/painel', 'painel'], ['Ajuda', '#/ajuda', 'ajuda']].map(([label, href, k]) => ({ label, href, peso: view === k ? 700 : 500, atual: view === k ? 'page' : 'false' })),
+      contraste: S.contraste,
+      toggleContraste: () => { const c = !S.contraste; this.lsSet('mr-contraste', c ? '1' : '0'); document.documentElement.dataset.contraste = c ? '1' : '0'; set({ contraste: c }); },
+      abrirCookies: () => set({ cookies: false }),
+      logado: S.logado, naoLogado: !S.logado, entrarTxt: vw >= 620 ? 'Entrar com gov.br' : 'Entrar',
+      entrar: () => { set({ logado: true }); this.toast('Você entrou com a conta gov.br', 'Perfil: membro da Cipa. Suas comunicações e notificações estão disponíveis.', 'success'); },
+      sair: () => { set({ logado: false, dd: null }); this.toast('Você saiu da sua conta', '', 'info'); },
+      ddAberto: !!S.dd, fecharDd: () => set({ dd: null }),
+      notifAberto: S.dd === 'notif', toggleNotif: () => set(s => ({ dd: s.dd === 'notif' ? null : 'notif' })),
+      userAberto: S.dd === 'user', toggleUser: () => set(s => ({ dd: s.dd === 'user' ? null : 'user' })),
+      userChevron: S.dd === 'user' ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down',
+      userMenu: [{ label: 'Minhas comunicações', href: '#/acompanhar', icon: 'list-check' }, { label: 'Painel da Cipa', href: '#/painel', icon: 'chart-column' }],
+      notificacoes: [], notifN: 0,
+      menu: S.menu, toggleMenu: () => set(s => ({ menu: !s.menu, dd: null })), fecharMenu: () => set({ menu: false }),
+      menuOp: S.menu ? 1 : 0, menuPe: S.menu ? 'auto' : 'none', menuT: S.menu ? 'translateX(0)' : 'translateX(-105%)',
+      menuOculto: S.menu ? 'false' : 'true', menuVis: S.menu ? 'visible' : 'hidden', menuVisAtraso: S.menu ? '0s' : '300ms',
+      menuGrupos: [
+        { titulo: 'Mapa de risco', itens: [{ label: 'Início', href: '#/', icon: 'house' }, ...andaresMenu.map(([label, id]) => ({ label, href: '#/andar/' + id, icon: 'layer-group' }))] },
+        { titulo: 'Participe', itens: [{ label: 'Comunicar risco', href: '#/comunicar', icon: 'triangle-exclamation' }, { label: 'Acompanhar comunicação', href: '#/acompanhar', icon: 'magnifying-glass' }] },
+        { titulo: 'Informações', itens: [{ label: 'Painel da Cipa', href: '#/painel', icon: 'chart-column' }, { label: 'Normas e metodologia', href: '#/normas', icon: 'scale-balanced' }, { label: 'Ajuda', href: '#/ajuda', icon: 'circle-question' }] }
+      ],
+      hashAtual: hash,
+      q: S.q, onBusca: e => set({ q: e.target.value }), onBuscaTecla: e => { if (e.key === 'Escape') set({ q: '' }); }, hasQ: false, resultados: [], semResultado: false,
+      toasts: S.toasts.map(t => ({ ...t, fechar: () => set(s => ({ toasts: s.toasts.filter(x => x.id !== t.id) })) })),
+      mostrarCookie: !S.cookies, aceitarCookies: () => { this.lsSet('mr-cookies', '1'); set({ cookies: true }); },
+      mostrarTopo: S.topo, irTopo: () => window.scrollTo({ top: 0, behavior: 'smooth' }), topoBottom: S.cookies ? '24px' : '104px',
+      onbAberto: oi != null && ((this.props.tutorial ?? true) || S.onbManual),
+      onb: oi == null ? {} : { ...ONB[oi], legenda: !!ONB[oi].legenda, passos: ['Pavimentos', 'Leitura', 'Comunicação'], i: oi, temVoltar: oi > 0, p0: oi === 0, p1: oi === 1, p2: oi === 2,
+        proxTxt: oi === ONB.length - 1 ? 'Começar' : 'Próximo', prox: () => (oi === ONB.length - 1 ? fecharOnb() : set({ onb: oi + 1 })), voltar: () => set({ onb: Math.max(0, oi - 1) }), fechar: fecharOnb },
+      verTutorial: () => set({ onb: 0, onbManual: true }),
+      irComunicar: go('#/comunicar'),
+      rodape: [
+        { blocos: [{ title: 'Mapa de risco', items: [['Início', '#/'], ...andaresMenu.map(([l, id]) => [l, '#/andar/' + id])] }] },
+        { blocos: [{ title: 'Cipa', items: [['Comunicar risco', '#/comunicar'], ['Acompanhar comunicação', '#/acompanhar'], ['Painel da Cipa', '#/painel'], ['Normas e metodologia', '#/normas'], ['Ajuda', '#/ajuda']] }] },
+        { blocos: [{ title: 'Canais de atendimento', items: [['Ouvidoria', 'https://www.gov.br/codevasf/pt-br/canais_atendimento/ouvidoria'], ['Contatos', 'https://www.gov.br/codevasf/pt-br/canais_atendimento'], ['Comissão de Ética', 'https://www.gov.br/codevasf/pt-br/canais_atendimento'], ['Canal de Denúncias', 'https://falabr.cgu.gov.br']] }] },
+        { blocos: [{ title: 'Codevasf', items: [['Portal da Codevasf', 'https://www.gov.br/codevasf'], ['Empregados', 'https://www.gov.br/codevasf']] }, { title: 'Acesso restrito', items: [['e-Codevasf', 'https://www.gov.br/codevasf'], ['Correio eletrônico', 'https://www.gov.br/codevasf'], ['Extranet', 'https://www.gov.br/codevasf']] }] }
+      ].map(c => ({ blocos: c.blocos.map(b => ({ title: b.title, items: b.items.map(([label, href]) => ({ label, href })) })) })),
+      carregando: !D, isInicio: false, isAndar: false, isComunicar: false, isAcompanhar: false, isPainel: false, isNormas: false, isAjuda: false, isNaoEncontrado: false,
+      qrAberto: false, mostrarPsi, legenda: []
+    };
+    if (!D) return base;
+    const v = { ...base };
+    VIEWS.forEach(k => { v['is' + k.charAt(0).toUpperCase() + k.slice(1)] = view === k; });
+    v.isNaoEncontrado = VIEWS.indexOf(view) < 0;
+    const GR = D.GRUPOS.filter(g => g.id !== 'psi');
+    const GRAU = ['', 'pequeno', 'médio', 'grande'];
+    const SIT = { 'Recebida': ['var(--br-gray-5)', 'var(--br-gray-80)'], 'Em análise': ['var(--br-yellow-vivid-5)', 'var(--br-yellow-vivid-70)'], 'Inspeção agendada': ['var(--br-blue-warm-vivid-5)', 'var(--br-blue-warm-vivid-70)'], 'Concluída': ['var(--br-green-cool-vivid-5)', 'var(--br-green-cool-vivid-70)'] };
+    const COM = [...S.minhas, ...D.com];
+    const dotsDe = (s, sizes, ativos, minG = 0) => GR.filter(g => s.grupos[g.id] && s.grupos[g.id] >= minG && (!ativos || ativos[g.id])).map(g => ({ cor: g.cor, borda: g.borda, px: sizes[s.grupos[g.id]], titulo: g.nome + ' · grau ' + GRAU[s.grupos[g.id]] }));
+    const resumo = a => { const n = a.salas.length; const alto = a.salas.filter(s => s.max === 3).length; return n + ' locais mapeados' + (alto ? ' · ' + alto + ' com grau grande' : ''); };
+    const tecla = h => e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); location.hash = h; } };
+
+    if (S.logado) {
+      v.notificacoes = COM.filter(c => c.minha).map(c => { const u = c.historico[c.historico.length - 1]; return { titulo: c.protocolo + ' · ' + c.situacao, txt: u.txt, tipo: c.situacao === 'Concluída' ? 'success' : 'info', href: '#/acompanhar/' + c.protocolo }; });
+      v.notifN = v.notificacoes.length;
+    }
+
+    const q = norm(S.q.trim());
+    if (q) {
+      const PAG = [['Comunicar risco', '#/comunicar', 'comunicar denunciar risco acidente assedio quase'], ['Acompanhar comunicação', '#/acompanhar', 'acompanhar protocolo situacao status'], ['Painel da Cipa', '#/painel', 'painel indicadores estatisticas comunicacoes'], ['Normas e metodologia', '#/normas', 'normas nr regulamentadoras metodologia'], ['Ajuda', '#/ajuda', 'ajuda duvidas perguntas tutorial emergencia']];
+      const rs = [
+        ...D.andares.filter(a => norm(a.nome).includes(q)).map(a => ({ sigla: 'Pavimento', nome: a.nome, andarNome: a.salas.length + ' locais', href: '#/andar/' + a.id, icone: 'fa-solid fa-layer-group' })),
+        ...D.todas.filter(s => norm(s.sigla + ' ' + s.nome + ' ' + s.agentes.map(a => a.nome + ' ' + D.G[a.g].nome).join(' ')).includes(q)).map(s => ({ sigla: s.sigla, nome: s.nome, andarNome: s.andarNome, href: '#/andar/' + s.andar + '/' + s.id, icone: 'fa-solid fa-location-dot' })),
+        ...PAG.filter(([l, , k]) => norm(l + ' ' + k).includes(q)).map(([l, h]) => ({ sigla: 'Página', nome: l, andarNome: '', href: h, icone: 'fa-solid fa-file-lines' }))
+      ].slice(0, 8).map((r, i) => ({ ...r, fundo: i === 0 ? 'var(--bg-main-secondary)' : 'transparent' }));
+      v.hasQ = true; v.resultados = rs; v.semResultado = rs.length === 0;
+      v.onBuscaTecla = e => { if (e.key === 'Escape') set({ q: '' }); if (e.key === 'Enter' && rs[0]) { location.hash = rs[0].href; e.target.blur(); } };
+    }
+    v.legenda = D.GRUPOS.filter(g => mostrarPsi || g.id !== 'psi').map(g => ({ ...g, fundo: g.novo ? 'transparent' : g.cor, estiloBorda: g.novo ? 'dashed' : 'solid', selo: g.novo ? 'em avaliação' : '' }));
+
+    if (v.isInicio) {
+      const hi = S.hov; const gap = this.props.explosao ?? 62;
+      v.predioEscala = vw < 520 ? 0.72 : 1;
+      v.predio = D.andares.map((a, i) => ({
+        nome: a.nome, resumo: resumo(a), aria: a.nome + ': ' + resumo(a), abrir: go('#/andar/' + a.id), tecla: tecla('#/andar/' + a.id), enter: () => set({ hov: i }),
+        z: i * gap + (hi != null && i > hi ? 80 : 0),
+        borda: hi === i ? 'var(--interactive)' : 'var(--br-gray-40)', op: hi != null && hi !== i ? 0.5 : 1,
+        corLabel: hi === i ? 'var(--interactive)' : 'var(--fg-primary)',
+        nx: a.nucleo[0], ny: a.nucleo[1], nw: a.nucleo[2], nh: a.nucleo[3],
+        mini: a.salas.map(s => ({ x: s.x, y: s.y, w: s.w, h: s.h, dots: dotsDe(s, [0, 4, 6, 9]) }))
+      }));
+      v.sairAndar = () => set({ hov: null });
+      v.atalhos = [
+        { titulo: 'Ver a planta do meu andar', desc: 'Riscos, medidas preventivas e EPIs de cada setor.', href: '#/andar/p2', icone: 'fa-solid fa-layer-group' },
+        { titulo: 'Comunicar um risco', desc: 'Situações de risco, quase-acidentes, acidentes e assédio.', href: '#/comunicar', icone: 'fa-solid fa-triangle-exclamation' },
+        { titulo: 'Acompanhar comunicação', desc: 'Consulte o andamento pelo número de protocolo.', href: '#/acompanhar', icone: 'fa-solid fa-magnifying-glass' },
+        { titulo: 'Tirar dúvidas', desc: 'Perguntas frequentes e o que fazer em emergências.', href: '#/ajuda', icone: 'fa-solid fa-circle-question' }
+      ];
+      v.cardsAndar = D.andares.map(a => ({ nome: a.nome, href: '#/andar/' + a.id, resumo: resumo(a), grupos: GR.map(g => ({ cor: g.cor, n: a.salas.filter(s => s.grupos[g.id]).length, titulo: g.nome })).filter(g => g.n).map(g => ({ ...g, titulo: g.titulo + ': ' + g.n + ' locais' })) }));
+    }
+
+    if (v.isAndar) {
+      const A = D.andares.find(a => a.id === p1) || D.andares[2];
+      this._andarId = A.id;
+      const sel = A.salas.find(s => s.id === p2);
+      const m3 = S.modo3d ?? (this.props.visao3d ?? false);
+      const rot = S.rot; const soAlto = S.soAlto;
+      const todosOn = GR.every(g => !off[g.id]);
+      const ativos = {}; GR.forEach(g => { ativos[g.id] = !off[g.id]; });
+      const visivel = s => (todosOn || GR.some(g => s.grupos[g.id] && ativos[g.id])) && (!soAlto || s.max === 3);
+      v.andar = { nome: A.nome, resumo: resumo(A) };
+      v.migalhas = [{ label: 'Início', href: '#/' }, { label: 'Pavimentos', href: '#/andar/p2' }, { label: A.nome, href: '#/andar/' + A.id }];
+      v.abas = D.andares.map(a => ({ nome: a.nome, ativo: a.id === A.id, abrir: go('#/andar/' + a.id) }));
+      v.filtros = GR.map(g => ({ ...g, ativo: !off[g.id], n: A.salas.filter(s => s.grupos[g.id]).length, toggle: () => set(s => ({ off: { ...s.off, [g.id]: !s.off[g.id] } })),
+        chipFundo: off[g.id] ? 'var(--bg-main-primary)' : 'var(--br-blue-warm-vivid-5)', chipBorda: off[g.id] ? 'var(--border-secondary)' : 'var(--interactive)', chipOp: off[g.id] ? 0.6 : 1 }));
+      v.soAlto = soAlto; v.toggleAlto = () => set(s => ({ soAlto: !s.soAlto }));
+      v.altoBorda = soAlto ? 'var(--interactive)' : 'var(--border-secondary)'; v.altoFundo = soAlto ? 'var(--br-blue-warm-vivid-5)' : 'var(--bg-main-primary)';
+      v.altoIcone = soAlto ? 'fa-solid fa-square-check' : 'fa-regular fa-square';
+      v.filtrosAtivos = !todosOn || soAlto; v.limparFiltros = () => set({ off: {}, soAlto: false });
+      v.nucleo = { x: A.nucleo[0], y: A.nucleo[1], w: A.nucleo[2], h: A.nucleo[3] };
+      v.salas = A.salas.map(s => ({ ...s, aria: s.nome + ' (' + s.sigla + ')', abrir: go('#/andar/' + A.id + '/' + s.id), tecla: tecla('#/andar/' + A.id + '/' + s.id),
+        dots: dotsDe(s, [0, 12, 20, 30], ativos, soAlto ? 3 : 0),
+        enter: () => set({ hovSala: s.id }), leave: () => set(st => (st.hovSala === s.id ? { hovSala: null } : null)),
+        fundo: sel === s ? 'var(--br-blue-warm-vivid-5)' : (s.copa ? '#F8F8F8' : '#fff'),
+        contorno: sel === s ? '3px solid var(--interactive)' : 'none', op: visivel(s) ? 1 : 0.35 }));
+      v.planoVazio = !A.salas.some(visivel);
+      const hs = !m3 && A.salas.find(s => s.id === S.hovSala);
+      v.tip = hs ? { show: true, sigla: hs.sigla, nome: hs.nome, x: Math.min(84, Math.max(16, hs.x + hs.w / 2)), y: hs.y < 20 ? hs.y + hs.h : hs.y,
+        t: hs.y < 20 ? 'translate(-50%, 8px)' : 'translate(-50%, calc(-100% - 8px))',
+        grupos: GR.filter(g => hs.grupos[g.id]).map(g => ({ cor: g.cor, txt: g.nome + ' · ' + GRAU[hs.grupos[g.id]] })).concat(hs.agentes.length ? [] : [{ cor: 'var(--br-gray-40)', txt: 'Sem risco significativo' }]) } : { show: false };
+      v.modo3d = m3; v.is2d = !m3;
+      v.v2d = m3 ? 'secondary' : 'primary'; v.v3d = m3 ? 'primary' : 'secondary';
+      v.set2d = () => set({ modo3d: false }); v.set3d = () => set({ modo3d: true });
+      v.aspecto = m3 ? '1.2' : '1';
+      v.planT = m3 ? `translateY(-50%) rotateX(56deg) rotateZ(${rot}deg) scale(0.7)` : 'translateY(-50%)';
+      v.dotT = m3 ? `rotateZ(${-rot}deg) rotateX(-56deg)` : 'none';
+      v.labelT = m3 ? `rotateZ(${-rot}deg) rotateX(-56deg)` : 'none';
+      v.dotSombra = m3 ? '0 6px 10px rgba(0,0,0,.25)' : 'none';
+      v.cursor = m3 ? 'grab' : 'default'; v.toque = m3 ? 'none' : 'auto';
+      v.planDown = e => { if (m3) this._drag = { x: e.clientX, r: S.rot }; };
+      v.girarE = () => set(s => ({ rot: s.rot - 45 })); v.girarD = () => set(s => ({ rot: s.rot + 45 }));
+      v.abrirQR = () => set({ qr: true }); v.fecharQR = () => set({ qr: false }); v.qrAberto = S.qr; v.qrRef = this.qrRef;
+      v.qrTitulo = 'QR code do ' + A.nome;
+      v.imprimir = () => { set({ qr: false }); setTimeout(() => window.print(), 150); };
+      v.copiarLinkAndar = () => { this.copiar(this.qrUrl()); this.toast('Link copiado', 'O endereço do ' + A.nome + ' foi copiado.', 'success'); };
+      v.lista = [...A.salas].sort((a, b) => b.max - a.max || a.sigla.localeCompare(b.sigla)).map(s => ({ sigla: s.sigla, nome: s.nome, href: '#/andar/' + A.id + '/' + s.id, dots: dotsDe(s, [0, 8, 11, 14]), op: visivel(s) ? 1 : 0.45 }));
+      v.temFicha = !!sel; v.semFicha = !sel; v.fichaRef = this.fichaRef;
+      if (sel) {
+        const NIV = [['Sem risco significativo', 'var(--br-gray-5)', 'var(--br-gray-80)'], ['Risco de grau pequeno', 'var(--br-green-cool-vivid-5)', 'var(--br-green-cool-vivid-70)'], ['Risco de grau médio', 'var(--br-yellow-vivid-5)', 'var(--br-yellow-vivid-70)'], ['Risco de grau grande', 'var(--br-red-vivid-5)', 'var(--br-red-vivid-70)']][sel.max];
+        const ab = S.abertos;
+        v.ficha = { sigla: sel.sigla, nome: sel.nome, andarNome: A.nome, nivel: NIV[0], nivelFundo: NIV[1], nivelCor: NIV[2], voltar: '#/andar/' + A.id, comunicar: '#/comunicar/' + A.id + '/' + sel.id, semRiscos: sel.agentes.length === 0,
+          grupos: GR.filter(g => sel.grupos[g.id]).map(g => ({ nome: g.nome, cor: g.cor, borda: g.borda, px: [0, 14, 20, 28][sel.grupos[g.id]], grauTxt: GRAU[sel.grupos[g.id]], agentesTxt: sel.agentes.filter(a => a.g === g.id).map(a => a.nome).join(' · ') })),
+          medidas: sel.agentes.map((a, i) => { const aberto = ab[a.cod] ?? i === 0; return { nome: a.nome, cor: D.G[a.g].cor, borda: D.G[a.g].borda, medida: a.medida, epi: a.epi, temEpi: !!a.epi, nr: a.nr, aberto, icone: aberto ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down', toggle: () => set(s => ({ abertos: { ...s.abertos, [a.cod]: !aberto } })) }; }) };
+        v.copiarLink = () => { this.copiar(location.href); this.toast('Link copiado', 'Envie o endereço desta ficha para a sua equipe.', 'success'); };
+      }
+    }
+
+    if (v.isComunicar) {
+      v.migalhasCom = [{ label: 'Início', href: '#/' }, { label: 'Comunicar risco', href: '#/comunicar' }];
+      const sf = o => set(s => ({ f: { ...s.f, ...o }, erros: {} }));
+      const TIPOS = [['risco', 'Situação de risco', 'Condição do ambiente que pode causar acidente ou doença.'], ['quase', 'Quase-acidente', 'Algo que quase causou uma lesão ou um dano.'], ['acidente', 'Acidente', 'Ocorrência que causou lesão, doença ou dano.'], ['assedio', 'Assédio ou conduta inadequada', 'Assédio moral, sexual ou outra violência no trabalho. Tratamento sigiloso.']];
+      const tipoLabel = (TIPOS.find(t => t[0] === f.tipo) || TIPOS[0])[1];
+      v.wizPassos = ['Tipo', 'Local', 'Detalhes', 'Revisão']; v.wizI = S.w;
+      v.w0 = S.w === 0; v.w1 = S.w === 1; v.w2 = S.w === 2; v.w3 = S.w === 3;
+      v.tipos = TIPOS.map(([k, label, desc]) => ({ label, desc, checked: f.tipo === k, escolher: () => sf({ tipo: k }), borda: f.tipo === k ? '2px solid var(--interactive)' : '1px solid var(--border-secondary)', fundo: f.tipo === k ? 'var(--br-blue-warm-vivid-5)' : 'var(--bg-main-primary)', pad: f.tipo === k ? '15px' : '16px' }));
+      v.isAssedio = f.tipo === 'assedio';
+      v.fAndar = f.andar; v.fSala = f.sala; v.fGrupo = f.grupo; v.fDesc = f.desc; v.fAnon = f.anon; v.fNome = f.nome; v.fContato = f.contato;
+      v.optAndares = D.andares.map(a => ({ v: a.id, label: a.nome }));
+      const A = D.andares.find(a => a.id === f.andar);
+      const SL = A && A.salas.find(s => s.id === f.sala);
+      v.optSalas = A ? [...A.salas.map(s => ({ v: s.id, label: s.sigla === s.nome ? s.nome : s.sigla + ' — ' + s.nome })), { v: 'comum', label: 'Área comum (circulação, hall, escadas)' }] : [];
+      v.semAndar = !A;
+      v.optSalasEl = [React.createElement('option', { key: '_', value: '' }, 'Não sei ou prefiro não informar'), ...v.optSalas.map(o => React.createElement('option', { key: o.v, value: o.v }, o.label))];
+      v.optGrupos = D.GRUPOS.map(g => ({ v: g.id, label: g.nome }));
+      v.onAndar = e => sf({ andar: e.target.value, sala: '' }); v.onSala = e => sf({ sala: e.target.value }); v.onGrupo = e => sf({ grupo: e.target.value });
+      v.onDesc = e => sf({ desc: e.target.value }); v.onNome = e => sf({ nome: e.target.value }); v.onContato = e => sf({ contato: e.target.value });
+      v.onAnon = val => sf({ anon: val }); v.mostrarContato = !f.anon;
+      v.wizPlanta = A ? { show: true, nome: A.nome, nx: A.nucleo[0], ny: A.nucleo[1], nw: A.nucleo[2], nh: A.nucleo[3],
+        salas: A.salas.map(s => ({ x: s.x, y: s.y, w: s.w, h: s.h, sigla: s.sigla, nome: s.nome, sel: f.sala === s.id, fundo: f.sala === s.id ? 'var(--br-blue-warm-vivid-10)' : '#fff', contorno: f.sala === s.id ? '3px solid var(--interactive)' : 'none', cor: f.sala === s.id ? 'var(--br-blue-warm-vivid-70)' : '#333', escolher: () => sf({ sala: s.id }) })) } : { show: false };
+      v.erroAndar = S.erros.andar || ''; v.temErroAndar = !!S.erros.andar;
+      v.erroDesc = S.erros.desc; v.erroContato = S.erros.contato;
+      v.descHint = f.desc.length + ' de 1000 caracteres · mínimo de 20';
+      v.diaTxt = this.isoBR(f.dia);
+      v.calAberto = S.cal; v.toggleCal = () => set(s => ({ cal: !s.cal }));
+      const hoje = new Date(); const b0 = new Date(hoje.getFullYear(), hoje.getMonth() + S.calMes, 1);
+      const y = b0.getFullYear(), mo = b0.getMonth(); const nd = new Date(y, mo + 1, 0).getDate();
+      const MESES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+      v.cal = { titulo: MESES[mo] + ' de ' + y, semana: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map((l, i) => ({ l, i })), vazios: Array.from({ length: b0.getDay() }, (_, i) => ({ i })),
+        dias: Array.from({ length: nd }, (_, i) => { const d = i + 1; const iso = y + '-' + String(mo + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0'); return { d, sel: f.dia === iso, dis: new Date(y, mo, d) > hoje, escolher: () => set(s => ({ f: { ...s.f, dia: iso }, cal: false })) }; }),
+        ant: () => set(s => ({ calMes: Math.max(-11, s.calMes - 1) })), prox: () => set(s => ({ calMes: Math.min(0, s.calMes + 1) })), semProx: S.calMes >= 0,
+        hoje: () => set(s => ({ f: { ...s.f, dia: this.hojeISO() }, cal: false, calMes: 0 })) };
+      v.onFotos = files => set(s => ({ fotos: [...s.fotos, ...Array.from(files || []).map((fl, i) => ({ id: Date.now() + i, nome: fl.name, kb: Math.max(1, Math.round(fl.size / 1024)) }))].slice(0, 5) }));
+      v.fotos = S.fotos.map(ft => ({ ...ft, tam: ft.kb > 1024 ? (ft.kb / 1024).toFixed(1) + ' MB' : ft.kb + ' KB', remover: () => set(s => ({ fotos: s.fotos.filter(x => x.id !== ft.id) })) }));
+      v.temFotos = S.fotos.length > 0;
+      const localTxt = A ? A.nome + ' · ' + (SL ? SL.sigla + ' — ' + SL.nome : (f.sala === 'comum' ? 'Área comum' : 'Setor não informado')) : '—';
+      v.revisao = [
+        { label: 'Tipo', valor: tipoLabel, passo: 0 },
+        { label: 'Local', valor: localTxt, passo: 1 },
+        { label: 'Quando', valor: this.isoBR(f.dia), passo: 2 },
+        { label: 'Grupo de risco', valor: f.grupo ? D.G[f.grupo].nome : 'A Cipa fará a classificação', passo: 2 },
+        { label: 'Descrição', valor: f.desc || '—', passo: 2 },
+        { label: 'Fotos', valor: S.fotos.length ? S.fotos.map(x => x.nome).join(', ') : 'Nenhuma', passo: 2 },
+        { label: 'Identificação', valor: f.anon ? 'Envio anônimo' : (f.nome || 'Sem nome') + ' · ' + f.contato, passo: 2 }
+      ].map(r => ({ ...r, alterar: () => set({ w: r.passo, erros: {} }) }));
+      v.temVoltar = S.w > 0; v.voltar = () => set(s => ({ w: Math.max(0, s.w - 1), erros: {} }));
+      v.avancarTxt = S.w === 3 ? 'Enviar comunicação' : 'Continuar'; v.avancarIcone = S.w === 3 ? 'paper-plane' : 'arrow-right';
+      v.enviando = S.enviando;
+      v.avancar = () => {
+        if (S.enviando) return;
+        if (S.w === 1 && !f.andar) return set({ erros: { andar: 'Selecione o pavimento onde a situação ocorreu.' } });
+        if (S.w === 2) {
+          const e = {};
+          if (f.desc.trim().length < 20) e.desc = 'Descreva a situação com pelo menos 20 caracteres.';
+          if (!f.anon && !f.contato.trim()) e.contato = 'Informe um e-mail ou ramal para retorno.';
+          if (Object.keys(e).length) return set({ erros: e });
+        }
+        if (S.w < 3) return set({ w: S.w + 1, erros: {} }, () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        set({ enviando: true });
+        setTimeout(() => {
+          const st = this.state; const proto = 'CIPA-2026-' + String(st.seq).padStart(4, '0');
+          const hojeBR = this.isoBR(this.hojeISO());
+          const nova = this.enriquecer({ protocolo: proto, data: this.isoBR(st.f.dia), andar: st.f.andar, sala: st.f.sala, tipo: tipoLabel, grupo: st.f.grupo, situacao: 'Recebida', minha: true, sigiloso: st.f.tipo === 'assedio',
+            historico: [{ data: hojeBR, situacao: 'Recebida', txt: 'Comunicação registrada.' }] }, D.andares);
+          this.setState(s => ({ enviando: false, enviado: proto, seq: s.seq + 1, minhas: [nova, ...s.minhas] }), () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+          this.toast('Comunicação enviada', 'Protocolo ' + proto + '.', 'success');
+        }, 900);
+      };
+      v.enviado = !!S.enviado; v.naoEnviado = !S.enviado; v.protocolo = S.enviado || '';
+      v.acompanharEnviado = go('#/acompanhar/' + (S.enviado || ''));
+      v.copiarProtocolo = () => { this.copiar(S.enviado); this.toast('Protocolo copiado', S.enviado, 'success'); };
+      v.retornoTxt = f.tipo === 'assedio' ? 'A comunicação é sigilosa e será tratada pela Cipa conforme a Lei nº 14.457/2022.' : (f.anon ? 'Guarde este número para acompanhar a comunicação.' : 'A Cipa também vai responder pelo contato informado.');
+      v.novaCom = () => set({ enviado: null, w: 0, f: this.formVazio(), fotos: [], erros: {} });
+    }
+
+    if (v.isAcompanhar) {
+      v.migalhasAc = [{ label: 'Início', href: '#/' }, { label: 'Acompanhar comunicação', href: '#/acompanhar' }];
+      v.protoQ = S.protoQ; v.onProto = e => set({ protoQ: e.target.value });
+      const consultar = () => { const t = S.protoQ.trim(); if (t) location.hash = '#/acompanhar/' + encodeURIComponent(t.toUpperCase()); };
+      v.consultar = consultar; v.onProtoTecla = e => { if (e.key === 'Enter') consultar(); };
+      const n = (S.protoBusca || '').toUpperCase().trim(); const dig = n.replace(/\D/g, '');
+      const alvo = n ? COM.find(c => c.protocolo === n || (dig.length > 0 && dig.length <= 4 && c.protocolo.endsWith('-' + dig.padStart(4, '0')))) : null;
+      v.temAc = !!alvo; v.acNaoEnc = !!n && !alvo; v.acVazio = !n; v.protoBusca = S.protoBusca || '';
+      if (alvo) {
+        const sc = SIT[alvo.situacao];
+        v.ac = { ...alvo, tagFundo: sc[0], tagCor: sc[1], passos: D.SITUACOES, atual: alvo.situacao === 'Concluída' ? 4 : D.SITUACOES.indexOf(alvo.situacao),
+          grupoNome: alvo.grupo ? D.G[alvo.grupo].nome : 'Em classificação', grupoCor: alvo.grupo ? D.G[alvo.grupo].cor : 'var(--br-gray-40)',
+          hist: [...alvo.historico].reverse().map((h, i) => ({ ...h, cor: i === 0 ? 'var(--interactive)' : 'var(--br-gray-30)', peso: i === 0 ? 600 : 400 })) };
+      }
+      v.minhasLista = S.logado ? COM.filter(c => c.minha).map(c => ({ ...c, link: '#/acompanhar/' + c.protocolo, tagFundo: SIT[c.situacao][0], tagCor: SIT[c.situacao][1] })) : [];
+      v.temMinhas = v.minhasLista.length > 0; v.sugerirLogin = !S.logado;
+    }
+
+    if (v.isPainel) {
+      v.migalhasPainel = [{ label: 'Início', href: '#/' }, { label: 'Painel da Cipa', href: '#/painel' }];
+      v.abasPainel = [['geral', 'Visão geral'], ['com', 'Comunicações']].map(([k, nome]) => ({ nome, ativo: S.aba === k, abrir: () => set({ aba: k }) }));
+      v.abaGeral = S.aba === 'geral'; v.abaCom = S.aba === 'com';
+      const pub = COM.filter(c => !c.sigiloso);
+      const ag = {}; D.todas.forEach(s => s.agentes.forEach(a => { ag[a.cod] = (ag[a.cod] || 0) + 1; }));
+      v.kpis = [
+        { label: 'Locais mapeados', valor: D.todas.length, cor: 'var(--fg-primary)' },
+        { label: 'Locais com grau grande', valor: D.todas.filter(s => s.max === 3).length, cor: 'var(--br-red-vivid-60)' },
+        { label: 'Comunicações em aberto', valor: pub.filter(c => c.situacao !== 'Concluída').length, cor: 'var(--interactive)' },
+        { label: 'Comunicações concluídas', valor: pub.filter(c => c.situacao === 'Concluída').length, cor: 'var(--br-green-cool-vivid-60)' }
+      ];
+      v.heatCab = GR.map(g => ({ nome: g.nome, cor: g.cor }));
+      v.heat = [...D.andares].reverse().map(a => ({ nome: a.nome, href: '#/andar/' + a.id, cells: GR.map(g => {
+        const ss = a.salas.filter(s => s.grupos[g.id]); const mx = Math.max(0, ...ss.map(s => s.grupos[g.id]));
+        return { txt: ss.length || '–', titulo: a.nome + ' · ' + g.nome + ': ' + ss.length + ' locais' + (mx ? ', grau máximo ' + GRAU[mx] : ''),
+          fundo: ss.length ? `color-mix(in srgb, ${g.cor} ${[0, 22, 50, 88][mx]}%, white)` : 'var(--br-gray-2)',
+          cor: mx === 3 && g.id !== 'erg' ? '#fff' : (ss.length ? '#1B1B1B' : 'var(--fg-secondary)') };
+      }) }));
+      const top = Object.entries(ag).sort((a, b) => b[1] - a[1]).slice(0, 8); const mxA = top[0] ? top[0][1] : 1;
+      v.topAgentes = top.map(([c, n]) => ({ nome: D.AGENTES[c].nome, n, pct: Math.round(n / mxA * 100), cor: D.G[D.AGENTES[c].g].cor }));
+      v.altos = D.todas.filter(s => s.max === 3).map(s => ({ nome: s.nome, sigla: s.sigla, andarNome: s.andarNome, href: '#/andar/' + s.andar + '/' + s.id, agentes: s.agentes.filter(a => a.grau === 3).map(a => a.nome).join(', ') }));
+      const num = d => { const [dd, mm, yy] = d.split('/'); return +(yy + mm + dd); };
+      const t = norm(S.fTxt.trim());
+      let lst = pub.filter(c => (!S.fSit || c.situacao === S.fSit) && (!S.fAnd || c.andar === S.fAnd) && (!t || norm(c.protocolo + ' ' + c.local + ' ' + c.setorNome + ' ' + c.tipo).includes(t)));
+      const K = { data: c => num(c.data), protocolo: c => c.protocolo, local: c => c.local, tipo: c => c.tipo, situacao: c => D.SITUACOES.indexOf(c.situacao) }[S.ord.col];
+      lst = lst.sort((a, b) => (K(a) > K(b) ? 1 : K(a) < K(b) ? -1 : 0) * (S.ord.dir === 'asc' ? 1 : -1));
+      const POR = 6; const total = Math.max(1, Math.ceil(lst.length / POR)); const pag = Math.min(S.pag, total);
+      v.optSit = D.SITUACOES.map(s => ({ v: s, label: s })); v.optAnd = D.andares.map(a => ({ v: a.id, label: a.nome }));
+      v.fSit = S.fSit; v.fAnd = S.fAnd; v.fTxt = S.fTxt;
+      v.onFSit = e => set({ fSit: e.target.value, pag: 1 }); v.onFAnd = e => set({ fAnd: e.target.value, pag: 1 }); v.onFTxt = e => set({ fTxt: e.target.value, pag: 1 });
+      v.temFiltroCom = !!(S.fSit || S.fAnd || S.fTxt); v.limparCom = () => set({ fSit: '', fAnd: '', fTxt: '', pag: 1 });
+      v.colsCom = [['data', 'Data'], ['protocolo', 'Protocolo'], ['local', 'Local'], ['tipo', 'Tipo'], ['situacao', 'Situação']].map(([k, label]) => {
+        const at = S.ord.col === k;
+        return { label, icone: at ? (S.ord.dir === 'asc' ? 'fa-solid fa-sort-up' : 'fa-solid fa-sort-down') : 'fa-solid fa-sort', aria: at ? (S.ord.dir === 'asc' ? 'ascending' : 'descending') : 'none', cor: at ? 'var(--interactive)' : 'var(--fg-primary)',
+          ordenar: () => set(s => ({ ord: { col: k, dir: s.ord.col === k && s.ord.dir === 'desc' ? 'asc' : 'desc' } })) };
+      });
+      v.padCom = S.compacto ? '8px 16px' : '16px 16px';
+      v.densConf = S.compacto ? 'secondary' : 'primary'; v.densComp = S.compacto ? 'primary' : 'secondary';
+      v.setConf = () => set({ compacto: false }); v.setComp = () => set({ compacto: true });
+      v.linhasCom = lst.slice((pag - 1) * POR, pag * POR).map(c => ({ ...c, link: '#/acompanhar/' + c.protocolo, cor: c.grupo ? D.G[c.grupo].cor : 'var(--br-gray-40)', tagFundo: SIT[c.situacao][0], tagCor: SIT[c.situacao][1] }));
+      v.comVazio = lst.length === 0; v.comTem = lst.length > 0;
+      v.pag = pag; v.totalPag = total; v.onPag = n => set({ pag: n }); v.multiPag = total > 1;
+      v.contagemCom = lst.length + (lst.length === 1 ? ' comunicação' : ' comunicações') + (total > 1 ? ' · página ' + pag + ' de ' + total : '');
+      v.exportar = () => {
+        const linhas = [['Protocolo', 'Data', 'Pavimento', 'Setor', 'Tipo', 'Grupo de risco', 'Situação'], ...lst.map(c => [c.protocolo, c.data, c.andarNome, c.setor, c.tipo, c.grupo ? D.G[c.grupo].nome : '', c.situacao])];
+        const csv = '\ufeff' + linhas.map(r => r.map(x => '"' + String(x).replace(/"/g, '""') + '"').join(';')).join('\n');
+        const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); a.download = 'comunicacoes-cipa.csv'; document.body.appendChild(a); a.click(); a.remove();
+        this.toast('Planilha gerada', lst.length + ' comunicações exportadas em CSV.', 'success');
+      };
+    }
+
+    if (v.isNormas) {
+      v.migalhasNormas = [{ label: 'Início', href: '#/' }, { label: 'Normas e metodologia', href: '#/normas' }];
+      v.normas = D.NORMAS;
+    }
+    if (v.isAjuda) {
+      v.migalhasAjuda = [{ label: 'Início', href: '#/' }, { label: 'Ajuda', href: '#/ajuda' }];
+      v.ajuda = D.AJUDA;
+    }
+    return v;
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+/* GOV.BR DS v4 — elevation shadows (source: figma/elevation.json), 5 levels, cast+occlusion */
+:root{
+  --shadow-color:#000000;
+  --elevation-0:none;
+  --elevation-1:0 1px 4px 0 rgba(0,0,0,.2);
+  --elevation-2:0 4px 8px 0 rgba(0,0,0,.2);
+  --elevation-3:0 8px 12px 0 rgba(0,0,0,.2);
+  --elevation-4:0 12px 16px 0 rgba(0,0,0,.2);
+}
